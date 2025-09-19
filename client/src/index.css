@@ -1,57 +1,238 @@
-@import "tailwindcss";
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
-@plugin "tailwindcss-animate";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-:root {
-  --radius: 0.625rem;
-  /* Jan-Samadhan Custom Theme - HSL format for shadcn/ui compatibility */
-  --background: 45 25% 95%;        /* Light beige */
-  --foreground: 0 0% 10%;          /* Dark charcoal */
-  --card: 45 30% 90%;              /* Slightly darker beige */
-  --card-foreground: 0 0% 10%;     /* Dark charcoal */
-  --popover: 45 30% 90%;           /* Slightly darker beige */
-  --popover-foreground: 0 0% 10%;  /* Dark charcoal */
-  --primary: 20 95% 53%;           /* Orange accent */
-  --primary-foreground: 0 0% 100%; /* White text on orange */
-  --secondary: 45 40% 80%;         /* Medium beige */
-  --secondary-foreground: 0 0% 10%; /* Dark charcoal */
-  --muted: 45 40% 80%;             /* Medium beige */
-  --muted-foreground: 0 0% 40%;    /* Muted gray */
-  --accent: 38 95% 50%;            /* Amber for highlights */
-  --accent-foreground: 0 0% 10%;   /* Dark charcoal */
-  --destructive: 0 84% 60%;        /* Red for critical */
-  --destructive-foreground: 0 0% 100%; /* White text on red */
-  --border: 45 35% 75%;            /* Light border */
-  --input: 45 35% 75%;             /* Light border */
-  --ring: 20 95% 53%;              /* Orange focus ring */
+/* Civic Platform Design System - Professional, trustworthy colors for government/civic use.
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 224 71% 4%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 224 71% 4%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 224 71% 4%;
+
+    /* Civic Blue - Professional and trustworthy */
+    --primary: 217 91% 60%;
+    --primary-foreground: 0 0% 98%;
+    --primary-hover: 217 91% 55%;
+
+    /* Trust Green - For positive actions */
+    --success: 142 71% 45%;
+    --success-foreground: 0 0% 98%;
+
+    /* Alert Orange - For warnings */
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 98%;
+
+    /* Issue Red - For critical problems */  
+    --critical: 0 84% 60%;
+    --critical-foreground: 0 0% 98%;
+
+    --secondary: 217 32% 96%;
+    --secondary-foreground: 224 71% 4%;
+
+    --muted: 220 14% 96%;
+    --muted-foreground: 220 9% 46%;
+
+    --accent: 217 32% 96%;
+    --accent-foreground: 224 71% 4%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 217 91% 60%;
+
+    --radius: 0.75rem;
+
+    /* Status Colors for Issues */
+    --status-open: 0 84% 60%;
+    --status-in-progress: 38 92% 50%;
+    --status-resolved: 142 71% 45%;
+    --status-closed: 220 9% 46%;
+
+    /* Civic Gradients */
+    --gradient-civic: linear-gradient(135deg, hsl(217 91% 60%), hsl(142 71% 45%));
+    --gradient-hero: linear-gradient(135deg, hsl(217 91% 60%) 0%, hsl(217 91% 55%) 50%, hsl(142 71% 45%) 100%);
+    --gradient-card: linear-gradient(145deg, hsl(0 0% 100%) 0%, hsl(217 32% 98%) 100%);
+
+    /* Shadows */
+    --shadow-civic: 0 10px 30px -10px hsl(217 91% 60% / 0.3);
+    --shadow-card: 0 4px 20px -4px hsl(220 14% 35% / 0.1);
+    --shadow-hover: 0 8px 30px -8px hsl(217 91% 60% / 0.4);
+
+    /* Animations */
+    --transition-civic: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+    --sidebar-background: 0 0% 98%;
+
+    --sidebar-foreground: 240 5.3% 26.1%;
+
+    --sidebar-primary: 240 5.9% 10%;
+
+    --sidebar-primary-foreground: 0 0% 98%;
+
+    --sidebar-accent: 240 4.8% 95.9%;
+
+    --sidebar-accent-foreground: 240 5.9% 10%;
+
+    --sidebar-border: 220 13% 91%;
+
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    --background: 224 71% 4%;
+    --foreground: 0 0% 98%;
+
+    --card: 224 71% 4%;
+    --card-foreground: 0 0% 98%;
+
+    --popover: 224 71% 4%;
+    --popover-foreground: 0 0% 98%;
+
+    --primary: 217 91% 60%;
+    --primary-foreground: 224 71% 4%;
+    --primary-hover: 217 91% 65%;
+
+    --success: 142 71% 45%;
+    --success-foreground: 224 71% 4%;
+
+    --warning: 38 92% 50%;
+    --warning-foreground: 224 71% 4%;
+
+    --critical: 0 84% 60%;
+    --critical-foreground: 224 71% 4%;
+
+    --secondary: 215 28% 17%;
+    --secondary-foreground: 0 0% 98%;
+
+    --muted: 215 28% 17%;
+    --muted-foreground: 217 33% 64%;
+
+    --accent: 215 28% 17%;
+    --accent-foreground: 0 0% 98%;
+
+    --destructive: 0 62% 30%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 215 28% 17%;
+    --input: 215 28% 17%;
+    --ring: 217 91% 60%;
+
+    --status-open: 0 84% 60%;
+    --status-in-progress: 38 92% 50%;
+    --status-resolved: 142 71% 45%;
+    --status-closed: 217 33% 64%;
+
+    --gradient-civic: linear-gradient(135deg, hsl(217 91% 60%), hsl(142 71% 45%));
+    --gradient-hero: linear-gradient(135deg, hsl(217 91% 60%) 0%, hsl(217 91% 55%) 50%, hsl(142 71% 45%) 100%);
+    --gradient-card: linear-gradient(145deg, hsl(224 71% 4%) 0%, hsl(215 28% 17%) 100%);
+
+    --shadow-civic: 0 10px 30px -10px hsl(217 91% 60% / 0.4);
+    --shadow-card: 0 4px 20px -4px hsl(0 0% 0% / 0.3);
+    --shadow-hover: 0 8px 30px -8px hsl(217 91% 60% / 0.5);
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
 }
 
 @layer base {
   * {
-    border-color: hsl(var(--border));
+    @apply border-border;
   }
-  
+
   body {
-    background-color: hsl(var(--background));
-    color: hsl(var(--foreground));
-    font-family: 'Inter', 'Nunito Sans', system-ui, sans-serif;
+    @apply bg-background text-foreground font-sans antialiased;
   }
-  
-  /* Custom scrollbar */
-  ::-webkit-scrollbar {
-    width: 6px;
+}
+
+/* Leaflet Map Styles */
+.leaflet-container {
+  height: 100%;
+  width: 100%;
+  border-radius: var(--radius);
+}
+
+/* Custom map marker styles */
+.civic-marker {
+  @apply rounded-full border-2 border-white shadow-lg;
+}
+
+.civic-marker.status-open {
+  @apply bg-critical;
+}
+
+.civic-marker.status-in-progress {
+  @apply bg-warning;
+}
+
+.civic-marker.status-resolved {
+  @apply bg-success;
+}
+
+.civic-marker.status-closed {
+  @apply bg-muted;
+}
+
+/* Civic Components */
+@layer components {
+  .civic-card {
+    @apply bg-card border border-border rounded-lg shadow-sm hover:shadow-md transition-all duration-300;
+    background: var(--gradient-card);
+    box-shadow: var(--shadow-card);
   }
-  
-  ::-webkit-scrollbar-track {
-    background-color: #F5E6D3;
+
+  .civic-card:hover {
+    box-shadow: var(--shadow-hover);
   }
-  
-  ::-webkit-scrollbar-thumb {
-    background-color: #FDBA74;
-    border-radius: 9999px;
+
+  .civic-hero {
+    background: var(--gradient-hero);
   }
-  
-  ::-webkit-scrollbar-thumb:hover {
-    background-color: #FB923C;
+
+  .civic-transition {
+    transition: var(--transition-civic);
+  }
+
+  .status-badge {
+    @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium;
+  }
+
+  .status-badge.open {
+    background: hsl(var(--status-open) / 0.1);
+    color: hsl(var(--status-open));
+    border: 1px solid hsl(var(--status-open) / 0.2);
+  }
+
+  .status-badge.in-progress {
+    background: hsl(var(--status-in-progress) / 0.1);
+    color: hsl(var(--status-in-progress));
+    border: 1px solid hsl(var(--status-in-progress) / 0.2);
+  }
+
+  .status-badge.resolved {
+    background: hsl(var(--status-resolved) / 0.1);
+    color: hsl(var(--status-resolved));
+    border: 1px solid hsl(var(--status-resolved) / 0.2);
+  }
+
+  .status-badge.closed {
+    background: hsl(var(--muted) / 0.1);
+    color: hsl(var(--muted-foreground));
+    border: 1px solid hsl(var(--muted) / 0.2);
   }
 }

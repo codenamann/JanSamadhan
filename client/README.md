@@ -1,134 +1,73 @@
-# Jan-Samadhan Frontend
+# Welcome to your Lovable project
 
-A real-time citizen grievance portal built with React, Vite, and TailwindCSS.
+## Project info
 
-## Features
+**URL**: https://lovable.dev/projects/00869f15-a521-4b07-be6f-6b64ec96c2b3
 
-### 🏛️ **Citizen Portal**
-- **5-Step Complaint Flow**: Camera permission → Photo capture → Location permission → Type selection → User details
-- **Live Photo Capture**: Real-time camera access for issue documentation
-- **Precise Location**: GPS-based location sharing
-- **Complaint Tracking**: View status of submitted complaints
-- **Real-time Updates**: Live map showing all complaints
+## How can I edit this code?
 
-### 🏢 **Authority Dashboard**
-- **Live Map View**: See all complaints on an interactive map
-- **Complaint Management**: Assign, track, and resolve complaints
-- **Role-based Actions**: Different capabilities for citizens vs authorities
-- **Real-time Notifications**: Instant updates when new complaints arrive
+There are several ways of editing your application.
 
-### 🎨 **Design System**
-- **Custom Theme**: Beige/charcoal/orange color palette
-- **Mobile-first**: Fully responsive design
-- **Smooth Animations**: Framer Motion for delightful interactions
-- **Modern UI**: shadcn/ui components with custom styling
+**Use Lovable**
 
-## Tech Stack
+Simply visit the [Lovable Project](https://lovable.dev/projects/00869f15-a521-4b07-be6f-6b64ec96c2b3) and start prompting.
 
-- **React 19** - UI framework
-- **Vite** - Build tool and dev server
-- **TailwindCSS** - Styling with custom theme
-- **Framer Motion** - Animations
-- **React Leaflet** - Interactive maps
-- **Socket.IO** - Real-time communication
-- **Lucide React** - Icons
-- **Radix UI** - Accessible components
+Changes made via Lovable will be committed automatically to this repo.
 
-## Getting Started
+**Use your preferred IDE**
 
-1. **Install Dependencies**
-   ```bash
-   npm install
-   ```
+If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
 
-2. **Start Development Server**
-   ```bash
-   npm run dev
-   ```
+The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
 
-3. **Open Browser**
-   Navigate to `http://localhost:5173`
+Follow these steps:
 
-## Project Structure
+```sh
+# Step 1: Clone the repository using the project's Git URL.
+git clone <YOUR_GIT_URL>
 
-```
-src/
-├── components/
-│   ├── ui/           # Reusable UI components
-│   └── LiveMap.jsx   # Interactive map component
-├── context/
-│   └── ComplaintContext.jsx  # State management & Socket.IO
-├── pages/
-│   ├── Landing.jsx           # Role selection page
-│   ├── ComplaintFlow.jsx     # 5-step complaint process
-│   ├── CitizenDashboard.jsx  # Citizen complaint tracking
-│   └── AuthorityDashboard.jsx # Authority management
-└── lib/
-    └── utils.js      # Utility functions
+# Step 2: Navigate to the project directory.
+cd <YOUR_PROJECT_NAME>
+
+# Step 3: Install the necessary dependencies.
+npm i
+
+# Step 4: Start the development server with auto-reloading and an instant preview.
+npm run dev
 ```
 
-## Key Features
+**Edit a file directly in GitHub**
 
-### 📱 **Mobile-First Design**
-- Optimized for mobile devices
-- Touch-friendly interactions
-- Responsive layouts
+- Navigate to the desired file(s).
+- Click the "Edit" button (pencil icon) at the top right of the file view.
+- Make your changes and commit the changes.
 
-### 🗺️ **Interactive Maps**
-- OpenStreetMap integration
-- Real-time complaint markers
-- Color-coded status indicators
-- Click-to-view details
+**Use GitHub Codespaces**
 
-### 🔄 **Real-time Updates**
-- Socket.IO for live communication
-- Instant complaint notifications
-- Status updates across all users
+- Navigate to the main page of your repository.
+- Click on the "Code" button (green button) near the top right.
+- Select the "Codespaces" tab.
+- Click on "New codespace" to launch a new Codespace environment.
+- Edit files directly within the Codespace and commit and push your changes once you're done.
 
-### 🎯 **User Experience**
-- Intuitive 5-step complaint flow
-- Clear progress indicators
-- Smooth page transitions
-- Success/error feedback
+## What technologies are used for this project?
 
-## Color Palette
+This project is built with:
 
-- **Background**: Light beige (#FAF3E7)
-- **Cards**: Slightly darker beige (#F5E6D3)
-- **Text**: Dark charcoal (#1A1A1A)
-- **Primary**: Orange (#F97316)
-- **Success**: Green (#10B981)
-- **Warning**: Amber (#F59E0B)
-- **Error**: Red (#EF4444)
+- Vite
+- TypeScript
+- React
+- shadcn-ui
+- Tailwind CSS
 
-## Development
+## How can I deploy this project?
 
-The app uses a context-based state management system with Socket.IO for real-time features. All components are built with accessibility in mind using Radix UI primitives.
+Simply open [Lovable](https://lovable.dev/projects/00869f15-a521-4b07-be6f-6b64ec96c2b3) and click on Share -> Publish.
 
-### State Management
-- `ComplaintContext` manages global state
-- Socket.IO handles real-time updates
-- Local state for UI interactions
+## Can I connect a custom domain to my Lovable project?
 
-### Styling
-- TailwindCSS with custom theme
-- CSS variables for consistent theming
-- Responsive design patterns
+Yes, you can!
 
-## Backend Integration
+To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
 
-The frontend expects a backend server running on `http://localhost:5000` with:
-- REST API endpoints for complaints
-- Socket.IO server for real-time updates
-- CORS enabled for development
-
-## Browser Support
-
-- Chrome/Edge (recommended)
-- Firefox
-- Safari
-- Mobile browsers
-
-## License
-
-MIT License - see LICENSE file for details.
+Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)

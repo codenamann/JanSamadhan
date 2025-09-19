@@ -1,215 +1,79 @@
 import React from 'react';
-import { motion } from 'framer-motion';
-import { MapPin, Camera, Users, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { useComplaint } from '@/context/ComplaintContext';
+import { Card, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { MapPin, ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
-const Landing = ({ onRoleSelect }) => {
-  const { setUserRole } = useComplaint();
-
-  const handleRoleSelect = (role) => {
-    setUserRole(role);
-    if (onRoleSelect) {
-      onRoleSelect(role);
-    }
-  };
-
-  return (
-    <div className="min-h-screen bg-beige-50">
-      {/* Header */}
-      <header className="bg-white shadow-soft">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-6">
-            <div className="flex items-center">
-              <div className="w-10 h-10 bg-orange-500 rounded-xl flex items-center justify-center">
-                <MapPin className="w-6 h-6 text-white" />
-              </div>
-              <h1 className="ml-3 text-2xl font-bold text-charcoal-700">
-                Jan-Samadhan
-              </h1>
-            </div>
-            <p className="text-charcoal-500 text-sm">
-              Citizen Grievance Portal
-            </p>
+const Hero = () => (
+  <section className="bg-[#f5efe6]">
+    <div className="container mx-auto px-4 py-16 md:py-24 grid md:grid-cols-2 gap-10 items-center">
+      <div>
+        <Badge className="mb-4" variant="secondary">Jan-Samadhan</Badge>
+        <h1 className="text-3xl md:text-5xl font-extrabold tracking-tight text-foreground mb-4">Report. Track. Resolve. Together.</h1>
+        <p className="text-muted-foreground text-base md:text-lg mb-6">A transparent, citizen-first platform to report civic issues and watch them get resolved on a live city map.</p>
+        <div className="flex flex-wrap gap-3">
+          <Link to="/citizen/login"><Button size="lg">Citizen Login</Button></Link>
+          <Link to="/authority/login"><Button size="lg" variant="outline">Authority Login</Button></Link>
+        </div>
+      </div>
+      <div className="flex items-center justify-center">
+        <div className="relative w-full max-w-lg">
+          <div className="aspect-[4/3] rounded-xl border bg-card flex items-center justify-center">
+            <MapPin className="h-10 w-10 text-primary" />
+            {/* Replace with India map outline illustration/SVG later */}
           </div>
         </div>
-      </header>
-
-      {/* Hero Section */}
-      <section className="py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="text-center"
-          >
-            <h2 className="text-4xl md:text-6xl font-black text-charcoal-700 mb-6">
-              Report Issues,
-              <span className="text-orange-500 block">Get Solutions</span>
-            </h2>
-            <p className="text-xl text-charcoal-500 mb-12 max-w-3xl mx-auto">
-              A real-time platform connecting citizens with authorities to resolve 
-              civic issues quickly and efficiently.
-            </p>
-          </motion.div>
-
-          {/* Role Selection Cards */}
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto"
-          >
-            {/* Citizen Card */}
-            <Card className="group hover:shadow-card transition-all duration-300 cursor-pointer border-2 hover:border-orange-200">
-              <CardHeader className="text-center pb-4">
-                <div className="w-16 h-16 bg-orange-100 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:bg-orange-200 transition-colors">
-                  <Users className="w-8 h-8 text-orange-500" />
-                </div>
-                <CardTitle className="text-2xl font-bold text-charcoal-700">
-                  I'm a Citizen
-                </CardTitle>
-                <p className="text-charcoal-500">
-                  Report issues in your area and track their resolution
-                </p>
-              </CardHeader>
-              <CardContent className="pt-0">
-                <ul className="space-y-3 text-sm text-charcoal-600 mb-6">
-                  <li className="flex items-center">
-                    <Camera className="w-4 h-4 text-orange-500 mr-2" />
-                    Take photos of issues
-                  </li>
-                  <li className="flex items-center">
-                    <MapPin className="w-4 h-4 text-orange-500 mr-2" />
-                    Share precise location
-                  </li>
-                  <li className="flex items-center">
-                    <Shield className="w-4 h-4 text-orange-500 mr-2" />
-                    Track resolution status
-                  </li>
-                </ul>
-                <Button 
-                  className="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold"
-                  onClick={() => handleRoleSelect('citizen')}
-                >
-                  Report an Issue
-                </Button>
-              </CardContent>
-            </Card>
-
-            {/* Authority Card */}
-            <Card className="group hover:shadow-card transition-all duration-300 cursor-pointer border-2 hover:border-orange-200">
-              <CardHeader className="text-center pb-4">
-                <div className="w-16 h-16 bg-orange-100 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:bg-orange-200 transition-colors">
-                  <Shield className="w-8 h-8 text-orange-500" />
-                </div>
-                <CardTitle className="text-2xl font-bold text-charcoal-700">
-                  I'm an Authority
-                </CardTitle>
-                <p className="text-charcoal-500">
-                  Manage and resolve citizen complaints efficiently
-                </p>
-              </CardHeader>
-              <CardContent className="pt-0">
-                <ul className="space-y-3 text-sm text-charcoal-600 mb-6">
-                  <li className="flex items-center">
-                    <MapPin className="w-4 h-4 text-orange-500 mr-2" />
-                    View all complaints on map
-                  </li>
-                  <li className="flex items-center">
-                    <Users className="w-4 h-4 text-orange-500 mr-2" />
-                    Assign complaints to team
-                  </li>
-                  <li className="flex items-center">
-                    <Shield className="w-4 h-4 text-orange-500 mr-2" />
-                    Mark issues as resolved
-                  </li>
-                </ul>
-                <Button 
-                  className="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold"
-                  onClick={() => handleRoleSelect('authority')}
-                >
-                  Access Dashboard
-                </Button>
-              </CardContent>
-            </Card>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Features Section */}
-      <section className="py-16 bg-beige-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-12"
-          >
-            <h3 className="text-3xl font-bold text-charcoal-700 mb-4">
-              How It Works
-            </h3>
-            <p className="text-charcoal-500 max-w-2xl mx-auto">
-              Simple steps to report and resolve civic issues
-            </p>
-          </motion.div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {[
-              {
-                step: "1",
-                title: "Report Issue",
-                description: "Take a photo and share your location to report the problem",
-                icon: Camera
-              },
-              {
-                step: "2", 
-                title: "Authority Review",
-                description: "Authorities review and assign the complaint to appropriate team",
-                icon: Users
-              },
-              {
-                step: "3",
-                title: "Resolution",
-                description: "Track progress and get notified when the issue is resolved",
-                icon: Shield
-              }
-            ].map((feature, index) => (
-              <motion.div
-                key={feature.step}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.1 * index }}
-                className="text-center"
-              >
-                <div className="w-12 h-12 bg-orange-500 text-white rounded-xl flex items-center justify-center mx-auto mb-4 font-bold text-lg">
-                  {feature.step}
-                </div>
-                <feature.icon className="w-8 h-8 text-orange-500 mx-auto mb-4" />
-                <h4 className="text-xl font-semibold text-charcoal-700 mb-2">
-                  {feature.title}
-                </h4>
-                <p className="text-charcoal-500">
-                  {feature.description}
-                </p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="bg-charcoal-700 text-white py-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p className="text-charcoal-300">
-            © 2024 Jan-Samadhan. Empowering citizens, serving communities.
-          </p>
-        </div>
-      </footer>
+      </div>
     </div>
-  );
-};
+  </section>
+);
+
+const HowItWorks = () => (
+  <section className="bg-background">
+    <div className="container mx-auto px-4 py-14 grid md:grid-cols-3 gap-4">
+      {[{
+        title: 'Report Issue',
+        desc: 'Upload photos, pick location on map, submit with a tap.'
+      },{
+        title: 'Track Progress',
+        desc: 'See real-time pins: Red, Yellow, Green across your city.'
+      },{
+        title: 'Verified Closure',
+        desc: 'Issue closes only after your OTP verification.'
+      }].map((item) => (
+        <Card key={item.title} className="civic-card">
+          <CardContent className="p-6">
+            <h3 className="font-semibold mb-2">{item.title}</h3>
+            <p className="text-sm text-muted-foreground">{item.desc}</p>
+          </CardContent>
+        </Card>
+      ))}
+    </div>
+  </section>
+);
+
+const CTA = () => (
+  <section className="bg-[#f5efe6]">
+    <div className="container mx-auto px-4 py-12 flex flex-col md:flex-row items-center justify-between gap-4">
+      <div>
+        <h3 className="text-xl font-semibold">Ready to make your city better?</h3>
+        <p className="text-sm text-muted-foreground">Join Jan-Samadhan and start reporting issues today.</p>
+      </div>
+      <div className="flex gap-3">
+        <Link to="/citizen/login"><Button>Get Started <ArrowRight className="h-4 w-4 ml-2" /></Button></Link>
+        <Link to="/home"><Button variant="outline">Explore Demo</Button></Link>
+      </div>
+    </div>
+  </section>
+);
+
+const Landing = () => (
+  <main className="min-h-screen">
+    <Hero />
+    <HowItWorks />
+    <CTA />
+  </main>
+);
 
 export default Landing;
