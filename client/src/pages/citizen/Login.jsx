@@ -4,34 +4,47 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Link, useNavigate } from 'react-router-dom';
+import { set } from 'date-fns';
+import { citizenOTPApi, citizenVerifyOTP } from '@/lib/apiCitizen';
 
 const CitizenLogin = () => {
   const navigate = useNavigate();
   const [step, setStep] = useState(1); // 1 = phone entry, 2 = otp entry
   const [phone, setPhone] = useState('');
+  const [loading, setLoading] = useState(false);
   const [otp, setOtp] = useState('');
 
   const handlePhoneSubmit = async (e) => {
     e.preventDefault();
     try {
-      // TODO: call backend → /auth/citizen/send-otp { phone }
+      setLoading(true);
+      const res = await citizenOTPApi(phone)
       console.log("Sending OTP to", phone);
+      console.log(res);
+      if (res.success) {
+        setStep(2); // only move to step 2 if OTP sent successfully
+      } else {
+        console.error("Failed to send OTP:", res.message);
+      }
       setStep(2);
     } catch (err) {
       console.error(err);
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleOtpSubmit = async (e) => {
     e.preventDefault();
     try {
-      // TODO: call backend → /auth/citizen/verify-otp { phone, otp }
+      const res = await citizenVerifyOTP(phone, otp);
       console.log("Verifying OTP for", phone, "with", otp);
 
-      // If success → get JWT → save in localStorage
-      localStorage.setItem("token", "dummy-jwt-token");
-
-      navigate('/citizen/dashboard');
+      if(res.success){
+        localStorage.setItem("token", res.token);
+        navigate('/citizen/dashboard');
+      }
+      
     } catch (err) {
       console.error(err);
     }

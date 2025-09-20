@@ -1,5 +1,5 @@
-import TempUser from "../models/TempUser";
-import Citizen from "../models/Citizen";
+import TempUser from "../models/TempUser.js";
+import Citizen from "../models/Citizen.js";
 
 export const generateOTP = (length = 6) => {
     let otp = '';
@@ -13,24 +13,21 @@ export const saveTempOTP = async (phone, otp, ttlSeconds = 300) => {
     const now = new Date();
     const expiresAt = new Date(now.getTime() + ttlSeconds * 1000);
   
-    const citizen = new TempUser({
-      phone,
-      otp,
-      expiresAt,
-    });
-  
-    await otpDoc.save();
+    await TempUser.updateOne(
+        { phone },               
+        { $set: { otp, createdAt: new Date() } },
+        { upsert: true }
+    );
     
 };
 
 export const saveOTP = async (phone, otp, ttlSeconds = 300) => {
     const now = new Date();
     const expiresAt = new Date(now.getTime() + ttlSeconds * 1000);
-    const Citizen = Citizen.findOne({ phone });
-    if (!Citizen) throw new Error("Citizen not found");
-    Citizen
-  
-    await otpDoc.save();
+    const citizen = Citizen.findOne({ phone });
+    if (!citizen) throw new Error("Citizen not found");
+    citizen.setOtp(otp, expiresAt)
+    await citizen.save();
 };
   
 

@@ -1,6 +1,10 @@
 import express from "express";
 const router = express.Router();
-import { registerUser, loginUser } from "../controllers/authController.js";
+import { citizenSignin, citizenVerify } from "../controllers/authController.js";
 
-router.post("/register", registerUser);
-router.post("/login", loginUser);
+// router.post("/register", registerUser);
+router.post("/citizen/login", citizenSignin);
+
+router.post('/citizen/verify-otp', citizenVerify)
+
+export default router;

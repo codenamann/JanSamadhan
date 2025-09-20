@@ -50,6 +50,8 @@ const createCustomIcon = (status) => {
 const CivicMap = ({ 
   issues, 
   onIssueSelect, 
+  onIssueHover,
+  onIssueLeave,
   selectedIssue,
   className = "h-96 w-full" 
 }) => {
@@ -77,6 +79,12 @@ const CivicMap = ({
             eventHandlers={{
               click: () => {
                 onIssueSelect?.(issue);
+              },
+              mouseover: () => {
+                onIssueHover?.(issue);
+              },
+              mouseout: () => {
+                onIssueLeave?.();
               },
             }}
           >

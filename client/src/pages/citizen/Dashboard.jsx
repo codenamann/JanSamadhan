@@ -1,10 +1,11 @@
 import React from 'react';
-import Home from '@/pages/Home';
+import PublicMap from '../PublicMap';
 
-const CitizenDashboard = () => {
-  return <Home />;
-};
+const CitizenDashboard = (
 
+) => {
+  return (<PublicMap />);
+}
 export default CitizenDashboard;
 
 

@@ -20,7 +20,7 @@ export default defineConfig(async ({ mode }) => {
     host: "::",
     port: 8080,
   },
-    plugins: [react(), ...devPlugins].filter(Boolean),
+    plugins: [react(), tailwindcss(), ...devPlugins].filter(Boolean),
     css: {
       postcss: {
         plugins: [tailwindcss(), autoprefixer()],

@@ -5,6 +5,7 @@ import morgan from "morgan";
 import connectDB from "./config/db.js";
 import complaintRoutes from "./routes/complaintRoutes.js";
 import { requestLogger, errorLogger } from "./middleware/logger.js";
+import authRoutes from './routes/auth.js'
 
 // Load environment variables
 dotenv.config();
@@ -15,7 +16,7 @@ const PORT = process.env.PORT || 5000;
 
 // Middleware
 app.use(cors({
-  origin: process.env.CLIENT_URL || "http://localhost:5173",
+  origin: process.env.CLIENT_URL || "http://localhost:8080",
   credentials: true
 }));
 
@@ -58,6 +59,7 @@ app.get("/api/health", (req, res) => {
 
 // API Routes
 app.use("/api/complaints", complaintRoutes);
+app.use('/api/auth', authRoutes)
 
 // 404 handler for undefined routes
 app.use("*", (req, res) => {

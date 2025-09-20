@@ -9,6 +9,6 @@ const tempUserSchema = new Schema({
     expiresAt: { type: Date, required: true },
 });
 
-tempCitizenSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
+tempUserSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
 
 export default mongoose.model("TempUser", tempUserSchema);

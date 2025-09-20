@@ -1,9 +1,9 @@
-import Citizen from "../models/Citizen";
-import { generateOTP, saveOTP } from "./otp";
+import Citizen from "../models/Citizen.js";
+import { generateOTP, saveOTP, saveTempOTP } from "./otp.js";
 
 export const citizenSignup = async (phone) => {
     const otp = generateOTP();
-    await saveOTP(phone, otp);
+    await saveTempOTP(phone, otp);
     return otp;
 };
 
@@ -23,6 +23,6 @@ export const sendOTP = async (phone) => {
 export const getOTP = async (phone) => {
     const citizen = Citizen.findOne({ phone });
     const otp = generateOTP();
-    await citizen.setOtp(otp);
+    await citizen.setOtp(otp, 300);
     return otp;
 }

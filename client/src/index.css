@@ -5,52 +5,64 @@
 /* Civic Platform Design System - Professional, trustworthy colors for government/civic use.
 All colors MUST be HSL.
 */
+html {
+  scroll-behavior: smooth;
+}
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 224 71% 4%;
+    /* Base background (your beige) */
+    --background: 60 90% 96%;         /* Soft Beige */
+    --foreground: 24 15% 20%;         /* Dark Brown for text */
 
-    --card: 0 0% 100%;
-    --card-foreground: 224 71% 4%;
+    /* Brand identity */
+    --primary: 26 100% 50%;           
+    --primary-foreground: 0 0% 100%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 224 71% 4%;
+    /* Secondary layer (cards, highlights) */
+    --secondary: 60 43% 92%;         
+    --secondary-foreground: 24 20% 20%; 
+    --secondary-hover: 60 43% 85%;
 
-    /* Civic Blue - Professional and trustworthy */
-    --primary: 217 91% 60%;
-    --primary-foreground: 0 0% 98%;
-    --primary-hover: 217 91% 55%;
+    /* Accent (links, highlights, subtle CTAs) */
+    --accent: 26 100% 50%; 
+    --accent-foreground: 0 0% 100%;
 
-    /* Trust Green - For positive actions */
-    --success: 142 71% 45%;
-    --success-foreground: 0 0% 98%;
+    /* Neutral system UI (borders, inputs, muted states) */
+    --muted: 42 20% 92%;              /* Lighter Sand */
+    --muted-foreground: 24 10% 35%;
 
-    /* Alert Orange - For warnings */
-    --warning: 38 92% 50%;
-    --warning-foreground: 0 0% 98%;
+    /* Borders, input outlines */
+    --border: 42 15% 80%;
+    --input: 42 15% 80%;
+
+    /* Status colors */
+    --success: 140 50% 40%;           /* Emerald Green */
+    --success-foreground: 0 0% 100%;
+
+    --warning: 42 100% 50%;           /* Amber */
+    --warning-foreground: 0 0% 100%;
+
+    --error: 0 75% 50%;               /* Red */
+    --error-foreground: 0 0% 100%;
+
+    /* Subtle UI backgrounds */
+    --bg-soft: 42 20% 97%;            /* Almost white with warmth */
+    --bg-contrast: 42 25% 85%;        /* Contrast beige */
+
 
     /* Issue Red - For critical problems */  
     --critical: 0 84% 60%;
     --critical-foreground: 0 0% 98%;
 
-    --secondary: 217 32% 96%;
-    --secondary-foreground: 224 71% 4%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 60 9.1% 97.8%;
 
-    --muted: 220 14% 96%;
-    --muted-foreground: 220 9% 46%;
+    --border: 20 5.9% 90%;
+    --input: 20 5.9% 90%;
+    --ring: 20 14.3% 4.1%;
 
-    --accent: 217 32% 96%;
-    --accent-foreground: 224 71% 4%;
-
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 98%;
-
-    --border: 220 13% 91%;
-    --input: 220 13% 91%;
-    --ring: 217 91% 60%;
-
-    --radius: 0.75rem;
+    --radius: 0.5rem;
 
     /* Status Colors for Issues */
     --status-open: 0 84% 60%;
@@ -86,20 +98,30 @@ All colors MUST be HSL.
     --sidebar-border: 220 13% 91%;
 
     --sidebar-ring: 217.2 91.2% 59.8%;
+
+    --chart-1: 12 76% 61%;
+
+    --chart-2: 173 58% 39%;
+
+    --chart-3: 197 37% 24%;
+
+    --chart-4: 43 74% 66%;
+
+    --chart-5: 27 87% 67%;
   }
 
   .dark {
-    --background: 224 71% 4%;
-    --foreground: 0 0% 98%;
+    --background: 20 14.3% 4.1%;
+    --foreground: 60 9.1% 97.8%;
 
-    --card: 224 71% 4%;
-    --card-foreground: 0 0% 98%;
+    --card: 20 14.3% 4.1%;
+    --card-foreground: 60 9.1% 97.8%;
 
-    --popover: 224 71% 4%;
-    --popover-foreground: 0 0% 98%;
+    --popover: 20 14.3% 4.1%;
+    --popover-foreground: 60 9.1% 97.8%;
 
-    --primary: 217 91% 60%;
-    --primary-foreground: 224 71% 4%;
+    --primary: 60 9.1% 97.8%;
+    --primary-foreground: 24 9.8% 10%;
     --primary-hover: 217 91% 65%;
 
     --success: 142 71% 45%;
@@ -111,21 +133,21 @@ All colors MUST be HSL.
     --critical: 0 84% 60%;
     --critical-foreground: 224 71% 4%;
 
-    --secondary: 215 28% 17%;
-    --secondary-foreground: 0 0% 98%;
+    --secondary: 12 6.5% 15.1%;
+    --secondary-foreground: 60 9.1% 97.8%;
 
-    --muted: 215 28% 17%;
-    --muted-foreground: 217 33% 64%;
+    --muted: 12 6.5% 15.1%;
+    --muted-foreground: 24 5.4% 63.9%;
 
-    --accent: 215 28% 17%;
-    --accent-foreground: 0 0% 98%;
+    --accent: 12 6.5% 15.1%;
+    --accent-foreground: 60 9.1% 97.8%;
 
-    --destructive: 0 62% 30%;
-    --destructive-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 60 9.1% 97.8%;
 
-    --border: 215 28% 17%;
-    --input: 215 28% 17%;
-    --ring: 217 91% 60%;
+    --border: 12 6.5% 15.1%;
+    --input: 12 6.5% 15.1%;
+    --ring: 24 5.7% 82.9%;
 
     --status-open: 0 84% 60%;
     --status-in-progress: 38 92% 50%;
@@ -147,6 +169,11 @@ All colors MUST be HSL.
     --sidebar-accent-foreground: 240 4.8% 95.9%;
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
   }
 }
 
@@ -234,5 +261,15 @@ All colors MUST be HSL.
     background: hsl(var(--muted) / 0.1);
     color: hsl(var(--muted-foreground));
     border: 1px solid hsl(var(--muted) / 0.2);
+  }
+}
+/* ---break---
+*/
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
   }
 }
