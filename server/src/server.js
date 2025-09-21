@@ -7,8 +7,6 @@ import complaintRoutes from "./routes/complaintRoutes.js";
 import authRoutes from './routes/auth.js';
 import imageRoutes from './routes/imageRoutes.js';
 import { Server } from "socket.io";
-import { initIssueSocket } from "./services/issueService.js";
-import { initSocket } from "./socket.js";
 import { createServer } from "http";
 
 // Load environment variables
