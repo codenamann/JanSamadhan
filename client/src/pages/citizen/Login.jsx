@@ -5,21 +5,23 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Link, useNavigate } from 'react-router-dom';
 import { set } from 'date-fns';
-import { citizenOTPApi, citizenVerifyOTP } from '@/lib/apiCitizen';
+import { citizenOTPApi, citizenSubmitName, citizenVerifyOTP } from '@/lib/apiCitizen';
+import { useCitizenAuth } from '@/context/CitizenAuthContext';
 
 const CitizenLogin = () => {
   const navigate = useNavigate();
+  const { login } = useCitizenAuth();
   const [step, setStep] = useState(1); // 1 = phone entry, 2 = otp entry
-  const [phone, setPhone] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [citizen, setCitizen] = useState({});
   const [otp, setOtp] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handlePhoneSubmit = async (e) => {
     e.preventDefault();
     try {
       setLoading(true);
-      const res = await citizenOTPApi(phone)
-      console.log("Sending OTP to", phone);
+      const res = await citizenOTPApi(citizen.phone)
+      console.log("Sending OTP to", citizen.phone);
       console.log(res);
       if (res.success) {
         setStep(2); // only move to step 2 if OTP sent successfully
@@ -37,21 +39,57 @@ const CitizenLogin = () => {
   const handleOtpSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await citizenVerifyOTP(phone, otp);
-      console.log("Verifying OTP for", phone, "with", otp);
-
+      setLoading(true);
+      console.log("Verifying OTP for", citizen.phone, "with", otp);
+      const res = await citizenVerifyOTP(citizen.phone, otp);
+      setOtp('');
       if(res.success){
-        localStorage.setItem("token", res.token);
-        navigate('/citizen/dashboard');
+        // Extract user data from token or response
+        if(res.new){
+          setStep(3);
+        }else{
+          console.log(res.token);
+          const userData = {
+            id: res.user?.id,
+            name: res.user?.name,
+            phone: res.user.phone,
+            role: res.user?.role
+          };
+          console.log(userData);
+          login(userData, res.token);
+          navigate('/citizen/dashboard');
+        }
       }
-      
     } catch (err) {
       console.error(err);
+    } finally{
+      setLoading(false);
     }
   };
+  const handleNameSubmit = async (e) => {
+    e.preventDefault();
+    try{
+      const res = await citizenSubmitName(citizen.phone, citizen.name);
+      console.log("Submitting name", citizen.phone, "with", citizen.name);
+      console.log(res);
+      console.log(res.token);
+      const userData = {
+        id: res.user?.id,
+        name: res.user?.name,
+        phone: res.user.phone,
+        role: res.user?.role
+      };
+      console.log(userData);
+      login(userData, res.token);
+      navigate('/citizen/dashboard');
+    }catch(err){
+      console.error(err);
+    }
+
+  }
 
   return (
-    <div className="min-h-screen bg-[#f5efe6] flex items-center justify-center px-4">
+    <div className="min-h-screen bg-background flex items-center justify-center px-4">
       <Card className="w-full max-w-md">
         <CardContent className="p-6 space-y-4">
           <div>
@@ -68,8 +106,8 @@ const CitizenLogin = () => {
                 <Input
                   id="phone"
                   type="tel"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
+                  value={citizen.phone}
+                  onChange={(e) => setCitizen({...citizen, phone:e.target.value})}
                   required
                 />
               </div>
@@ -100,13 +138,21 @@ const CitizenLogin = () => {
               </Button>
             </form>
           )}
-
-          <div className="text-xs text-muted-foreground">
-            Admin?{" "}
-            <Link to="/authority/login" className="underline">
-              Authority Login
-            </Link>
-          </div>
+          {step == 3 && (
+            <form onSubmit={handleNameSubmit} className="space-y-3">
+            <div className="space-y-2">
+              <Label htmlFor="name">Enter Your Name</Label>
+              <Input
+                id="name"
+                type="text"
+                value={citizen.name}
+                onChange={(e) => setCitizen({ ...citizen, name:e.target.value})}
+                required
+              />
+            </div>
+            <Button type="submit" className="w-full">Activate Account</Button>
+          </form>
+          )}
         </CardContent>
       </Card>
     </div>

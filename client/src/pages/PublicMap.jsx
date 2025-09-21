@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import LogoImage from "@/assets/JanSamadhan.png"
 import { mockIssues } from "@/data/mockData";
 import CivicMap from "@/components/Map/CivicMap";
@@ -19,6 +19,7 @@ import {
   User,
   Minimize,
   Maximize,
+  LayoutDashboard,
 } from "lucide-react";
 import Logo from "@/components/ui/logo";
 
@@ -29,6 +30,7 @@ const PublicMap = () => {
   const [showIssueCard, setShowIssueCard] = useState(false);
   const [hoveredIssue, setHoveredIssue] = useState(null);
   const mapRef = useRef(null);
+  const navigate = useNavigate();
 
   // Handle fullscreen toggle
   const toggleFullscreen = () => {
@@ -81,9 +83,9 @@ const PublicMap = () => {
                 <Settings className="h-4 w-4 mr-2" />
                 Settings
               </Button>
-              <Button variant="outline" size="sm" className="hidden sm:flex">
-                <User className="h-4 w-4 mr-2" />
-                Profile
+              <Button variant="outline" size="sm" className="hidden sm:flex" onClick={()=>navigate('/citizen/dashboard')}>
+                <LayoutDashboard className="h-4 w-4 mr-2" />
+                Dashboard
               </Button>
               <Button variant="outline" size="sm">
                 <Menu className="h-4 w-4" />

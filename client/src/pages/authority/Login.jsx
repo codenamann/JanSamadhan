@@ -4,15 +4,28 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Link, useNavigate } from 'react-router-dom';
+import { useAuthorityAuth } from '@/context/AuthorityAuthContext';
 
 const AuthorityLogin = () => {
   const navigate = useNavigate();
+  const { login } = useAuthorityAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const onSubmit = (e) => {
     e.preventDefault();
-    // TODO: integrate real auth
+    // TODO: integrate real auth API
+    // For now, mock login
+    const userData = {
+      id: '1',
+      name: 'Admin User',
+      email: email,
+      department: 'Public Works',
+      role: 'authority'
+    };
+    const mockToken = 'mock_authority_token_' + Date.now();
+    
+    login(userData, mockToken);
     navigate('/authority/dashboard');
   };
 
