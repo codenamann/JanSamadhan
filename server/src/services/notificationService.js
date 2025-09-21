@@ -19,10 +19,10 @@ export const addNotification = async (citizenId, notification) => {
     citizen.notifications.push(newNotification);
     await citizen.save();
 
-    console.log(`📬 Notification added to citizen ${citizenId}: ${notification.title}`);
+    console.log(`Notification added to citizen ${citizenId}: ${notification.title}`);
     return newNotification;
   } catch (error) {
-    console.error('❌ Error adding notification:', error.message);
+    console.error('Error adding notification:', error.message);
     throw error;
   }
 };
@@ -58,7 +58,7 @@ export const sendComplaintStatusNotification = async (citizenId, complaintId, st
 
     return notification;
   } catch (error) {
-    console.error('❌ Error sending complaint status notification:', error.message);
+    console.error('Error sending complaint status notification:', error.message);
     throw error;
   }
 };
@@ -88,7 +88,7 @@ export const sendComplaintResolutionNotification = async (citizenId, complaintId
 
     return notification;
   } catch (error) {
-    console.error('❌ Error sending complaint resolution notification:', error.message);
+    console.error('Error sending complaint resolution notification:', error.message);
     throw error;
   }
 };
@@ -118,7 +118,7 @@ export const sendPriorityAlertNotification = async (citizenId, complaintId, prio
 
     return notification;
   } catch (error) {
-    console.error('❌ Error sending priority alert notification:', error.message);
+    console.error('Error sending priority alert notification:', error.message);
     throw error;
   }
 };
@@ -141,7 +141,7 @@ export const markNotificationAsRead = async (citizenId, notificationId) => {
 
     return notification;
   } catch (error) {
-    console.error('❌ Error marking notification as read:', error.message);
+    console.error('Error marking notification as read:', error.message);
     throw error;
   }
 };
@@ -161,7 +161,7 @@ export const getCitizenNotifications = async (citizenId, limit = 50) => {
 
     return notifications;
   } catch (error) {
-    console.error('❌ Error getting citizen notifications:', error.message);
+    console.error(' Error getting citizen notifications:', error.message);
     throw error;
   }
 };
@@ -177,7 +177,7 @@ export const getUnreadNotificationCount = async (citizenId) => {
     const unreadCount = citizen.notifications.filter(n => !n.isRead).length;
     return unreadCount;
   } catch (error) {
-    console.error('❌ Error getting unread notification count:', error.message);
+    console.error(' Error getting unread notification count:', error.message);
     throw error;
   }
 };

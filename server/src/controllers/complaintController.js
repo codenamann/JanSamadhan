@@ -1,4 +1,5 @@
 import Complaint from "../models/Complaint.js";
+import { broadcastNewComplaint } from "../socket.js";
 
 // @desc    Get all complaints with filtering
 // @route   GET /api/complaints
@@ -93,16 +94,6 @@ export const createComplaint = async (req, res) => {
       reportedBy
     } = req.body;
     
-    // Validate input data
-    const validation = validateComplaintData(req.body);
-    if (!validation.isValid) {
-      return res.status(400).json({ 
-        success: false,
-        error: "Validation error",
-        details: validation.errors
-      });
-    }
-    
     if (!location?.lat || !location?.lng) {
       return res.status(400).json({ success: false, error: "Location coordinates required" });
     }
@@ -132,6 +123,7 @@ export const createComplaint = async (req, res) => {
     });
     
     const savedComplaint = await complaint.save();
+    broadcastNewComplaint(savedComplaint);
     
     res.status(201).json({
       success: true,

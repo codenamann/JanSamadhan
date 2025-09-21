@@ -3,6 +3,7 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import { Icon, divIcon } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { Badge } from '@/components/ui/badge';
+import { useSocket } from "./SocketContext";
 
 // Fix for default markers in Leaflet with Vite
 delete Icon.Default.prototype._getIconUrl;
@@ -55,7 +56,7 @@ const CivicMap = ({
   // Center map on Satna district, Madhya Pradesh, India
   const center = [24.5833, 80.8333];
   const mapRef = useRef(null);
-
+  
   // Pan to selected issue
   useEffect(() => {
     if (selectedIssue && mapRef.current) {

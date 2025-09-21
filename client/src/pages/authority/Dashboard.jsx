@@ -13,29 +13,18 @@ import { Textarea } from '../../components/ui/textarea';
 import LogoImage from '@/assets/JanSamadhan.png';
 import { 
   LogOut, 
-  User, 
-  Building2, 
   Phone, 
-  Mail, 
   Search, 
-  Filter, 
   Eye, 
   CheckCircle, 
   Clock, 
   AlertCircle, 
   MapPin, 
-  Calendar, 
-  MessageSquare, 
-  Bell,
   BarChart3,
   Map,
   List,
   RefreshCw,
-  Download,
-  ArrowLeft,
   Shield,
-  PhoneCall,
-  Mail as MailIcon,
   User as UserIcon
 } from 'lucide-react';
 import { Link } from 'react-router-dom';

@@ -17,7 +17,6 @@ export const generateOTP = () => {
 
 // Send OTP email
 export const sendOTPEmail = async (email, otp, name) => {
-  console.log(".env : ", process.env.BREVO_API_KEY);
   try {
     console.log(`Sending OTP email to: ${email}`);
     console.log(`OTP Code: ${otp}`);

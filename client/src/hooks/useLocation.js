@@ -15,12 +15,12 @@ export const useLocation = () => {
 
       setLoading(true);
       setError(null);
-      console.log('🌍 Requesting location permission...');
+      console.log('Requesting location permission...');
 
       navigator.geolocation.getCurrentPosition(
         async (position) => {
           const { latitude, longitude, accuracy } = position.coords;
-          console.log('📍 Location received:', { latitude, longitude, accuracy });
+          console.log('Location received:', { latitude, longitude, accuracy });
           
           try {
             // Try multiple reverse geocoding services for better accuracy
@@ -37,10 +37,10 @@ export const useLocation = () => {
               
               if (nominatimData.display_name) {
                 address = nominatimData.display_name;
-                console.log('✅ Address from Nominatim:', address);
+                console.log('Address from Nominatim:', address);
               }
             } catch (nominatimError) {
-              console.warn('⚠️ Nominatim failed:', nominatimError);
+              console.warn('Nominatim failed:', nominatimError);
             }
 
             // Fallback to BigDataCloud if Nominatim fails
@@ -62,10 +62,10 @@ export const useLocation = () => {
                   } else if (locality && locality.length > 0) {
                     address = locality[0].name;
                   }
-                  console.log('✅ Address from BigDataCloud:', address);
+                  console.log('Address from BigDataCloud:', address);
                 }
               } catch (bigDataError) {
-                console.warn('⚠️ BigDataCloud failed:', bigDataError);
+                console.warn('BigDataCloud failed:', bigDataError);
               }
             }
             
@@ -76,12 +76,12 @@ export const useLocation = () => {
               accuracy: accuracy
             };
             
-            console.log('📍 Final location data:', locationData);
+            console.log('Final location data:', locationData);
             setLocation(locationData);
             setLoading(false);
             resolve(locationData);
           } catch (err) {
-            console.error('❌ Reverse geocoding failed:', err);
+            console.error('Reverse geocoding failed:', err);
             // Fallback to coordinates if reverse geocoding fails
             const locationData = {
               lat: parseFloat(latitude.toFixed(6)),
@@ -90,14 +90,14 @@ export const useLocation = () => {
               accuracy: accuracy
             };
             
-            console.log('📍 Fallback location data:', locationData);
+            console.log('Fallback location data:', locationData);
             setLocation(locationData);
             setLoading(false);
             resolve(locationData);
           }
         },
         (error) => {
-          console.error('❌ Geolocation error:', error);
+          console.error('Geolocation error:', error);
           let errorMessage = 'Location access denied. Please allow location permissions.';
           
           switch (error.code) {
@@ -115,7 +115,7 @@ export const useLocation = () => {
               break;
           }
           
-          console.error('❌ Location error:', errorMessage);
+          console.error('Location error:', errorMessage);
           setError(errorMessage);
           setLoading(false);
           reject(new Error(errorMessage));
@@ -130,7 +130,7 @@ export const useLocation = () => {
   };
 
   const clearLocation = () => {
-    console.log('🧹 Clearing location data');
+    console.log('Clearing location data');
     setLocation(null);
     setError(null);
   };
