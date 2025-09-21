@@ -1,5 +1,5 @@
 import Complaint from "../models/Complaint.js";
-import { broadcastNewComplaint } from "../socket.js";
+import { broadcastNewComplaint } from "../server.js";
 
 // @desc    Get all complaints with filtering
 // @route   GET /api/complaints
@@ -124,7 +124,7 @@ export const createComplaint = async (req, res) => {
     
     const savedComplaint = await complaint.save();
     broadcastNewComplaint(savedComplaint);
-    
+
     res.status(201).json({
       success: true,
       message: "Complaint created successfully",

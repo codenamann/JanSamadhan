@@ -3,7 +3,6 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import { Icon, divIcon } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { Badge } from '@/components/ui/badge';
-import { useSocket } from "./SocketContext";
 
 // Fix for default markers in Leaflet with Vite
 delete Icon.Default.prototype._getIconUrl;
