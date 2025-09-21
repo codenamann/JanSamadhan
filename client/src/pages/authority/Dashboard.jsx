@@ -10,6 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/ta
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../components/ui/table';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '../../components/ui/dialog';
 import { Textarea } from '../../components/ui/textarea';
+import LogoImage from '@/assets/JanSamadhan.png';
 import { 
   LogOut, 
   User, 
@@ -40,6 +41,7 @@ import {
 import { Link } from 'react-router-dom';
 import { getAllComplaints, getComplaintStats } from '../../lib/apiCitizen';
 import { toast } from '../../hooks/use-toast';
+import Logo from '@/components/ui/logo';
 
 const Dashboard = () => {
   const { user, logout, loading } = useAuthorityAuth();
@@ -251,20 +253,15 @@ const Dashboard = () => {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
-              <Link to="/">
-                <Button variant="outline" size="sm">
-                  <ArrowLeft className="h-4 w-4 mr-2" />
-                  Back to Map
-                </Button>
-              </Link>
               <div>
-                <h1 className="text-xl font-bold">Authority Dashboard</h1>
-                <p className="text-sm text-muted-foreground">Manage and track civic complaints</p>
+              <Logo link={LogoImage} alt="JanSamadhan" className="w-32" />
+                {/* <h1 className="text-xl font-bold">Authority Dashboard</h1>
+                <p className="text-sm text-muted-foreground">Manage and track civic complaints</p> */}
               </div>
             </div>
             
             <div className="flex items-center gap-3">
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <div className="flex hidden md:flex items-center gap-2 text-sm text-muted-foreground">
                 <Shield className="h-4 w-4" />
                 <span>{user.name} - {user.department}</span>
               </div>
@@ -272,9 +269,14 @@ const Dashboard = () => {
                 <RefreshCw className="h-4 w-4 mr-2" />
                 Refresh
               </Button>
+              <Button variant="outline" asChild>
+                <Link to="/PublicMap">
+                  <Map className="h-4 w-4 mr-2" />
+                  View Map
+                </Link>
+              </Button>
               <Button variant="outline" size="sm" onClick={logout}>
-                <LogOut className="h-4 w-4 mr-2" />
-                Logout
+                <LogOut className="h-4 w-4" />
               </Button>
             </div>
           </div>

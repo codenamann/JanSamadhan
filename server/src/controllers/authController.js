@@ -4,6 +4,7 @@ import { citizenSignup, getOTP, isPhoneRegistered, sendOTP, verifySignin, verify
 import { verifyOTP } from "../utils/otp.js";
 import { token } from "morgan";
 import TempUser from "../models/TempUser.js";
+import { sendSMS } from "../services/smsService.js";
 // import sendSMS from './utils/sendSMS.js';
 
 export const citizenSignin = async (req, res) => {
@@ -12,11 +13,14 @@ export const citizenSignin = async (req, res) => {
     const citizenExists = await isPhoneRegistered(phone);
     if (!citizenExists) {
         const otp = await citizenSignup(phone);
+        const result = await sendSMS(phone, `Your OTP for signing up in JanSamadhan Portal is ${otp}. It is valid for 5 minutes.`);
+        console.log(result);
         console.log(`OTP sent to phone: ${otp}`);
         return res.status(200).json({ success:true, message: "OTP sent to phone" });
     }else{
-        console.log("citizen exist")
         const otp = await getOTP(phone);
+        const result = await sendSMS(phone, `Your OTP for signing into JanSamadhan Portal is ${otp}. It is valid for 5 minutes.`);
+        console.log(result);
         console.log(`OTP sent to phone: ${otp}`);
         return res.status(200).json({success:true, message: "OTP sent to phone" });
     }

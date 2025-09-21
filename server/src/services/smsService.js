@@ -8,7 +8,7 @@ let twilioClient;
 if (process.env.TWILIO_ACCOUNT_SID && process.env.TWILIO_AUTH_TOKEN) {
   twilioClient = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
 } else {
-  console.warn('⚠️ Twilio credentials not found. SMS functionality will be limited to console logging.');
+  console.warn('Twilio credentials not found. SMS functionality will be limited to console logging.');
 }
 
 // Generate OTP
@@ -19,12 +19,12 @@ export const generateOTP = () => {
 // Send SMS
 export const sendSMS = async (phoneNumber, message) => {
   try {
-    console.log(`📱 Sending SMS to: ${phoneNumber}`);
-    console.log(`📝 Message: ${message}`);
+    console.log(`Sending SMS to: ${phoneNumber}`);
+    console.log(`Message: ${message}`);
     
     // If Twilio is not configured, just log the SMS
     if (!twilioClient) {
-      console.log('⚠️ Twilio not configured. SMS logged to console only.');
+      console.log('Twilio not configured. SMS logged to console only.');
       return {
         success: true,
         message: "SMS logged to console (Twilio not configured)",
@@ -35,10 +35,11 @@ export const sendSMS = async (phoneNumber, message) => {
     const result = await twilioClient.messages.create({
       body: message,
       from: process.env.TWILIO_PHONE_NUMBER,
-      to: phoneNumber
+      to: `+91${phoneNumber}`
     });
+    console.log(phoneNumber)
 
-    console.log(`✅ SMS sent successfully. SID: ${result.sid}`);
+    console.log(`SMS sent successfully. SID: ${result.sid}`);
     return {
       success: true,
       message: "SMS sent successfully",
@@ -46,7 +47,7 @@ export const sendSMS = async (phoneNumber, message) => {
     };
 
   } catch (error) {
-    console.error('❌ Error sending SMS:', error.message);
+    console.error('Error sending SMS:', error.message);
     return {
       success: false,
       message: error.message,
