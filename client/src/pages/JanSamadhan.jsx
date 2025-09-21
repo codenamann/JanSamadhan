@@ -1,16 +1,28 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { MapPin } from "lucide-react";
 import Logo from "@/components/ui/logo";
 import LogoImage from "../assets/JanSamadhan.png";
 import MapImage from "../assets/World_map_-_low_resolution.svg"
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import { useCitizenAuth } from "@/context/CitizenAuthContext";
+import { useAuthorityAuth } from "@/context/AuthorityAuthContext";
 
 export default function JanSamadhanUI() {
   const tailwindText = "bg-gradient-to-r from-[#b77c25] to-[#cd9a3f] bg-clip-text text-transparent";
   const navigate = useNavigate();
   const SignupRef =  useRef(null);
+  const {user: Citizen} = useCitizenAuth();
+  const {user: authority} = useAuthorityAuth();
 
+  useEffect(() => {
+    if (Citizen) {
+      navigate('/citizen/dashboard', { replace: true });
+    } else if (authority) {
+      navigate('/authority/dashboard', { replace: true });
+    }
+  }, [Citizen, authority]);
+  
   return (
     <div className="bg-background min-h-screen px-4 py-6">
       <div className="max-w-6xl mx-auto rounded-2xl shadow-lg p-6 md:p-10">

@@ -196,7 +196,7 @@ const CitizenDashboard = () => {
             className="w-full justify-start"
             asChild
           >
-            <Link to="/report">
+            <Link to="/citizen/report">
               <Plus className="h-4 w-4 mr-3" />
               Report Issue
             </Link>
@@ -290,7 +290,7 @@ const CitizenDashboard = () => {
             </div>
             <div className="hidden sm:flex items-center space-x-2">
               <Button asChild>
-                <Link to="/report">
+                <Link to="/citizen/report">
                   <Plus className="h-4 w-4 mr-2" />
                   Report New Issue
                 </Link>
@@ -371,7 +371,7 @@ const CitizenDashboard = () => {
                 Start by reporting an issue in your community
               </p>
               <Button asChild>
-                <Link to="/report">
+                <Link to="/citizen/report">
                   <Plus className="h-4 w-4 mr-2" />
                   Report Your First Issue
                 </Link>
@@ -438,7 +438,7 @@ const CitizenDashboard = () => {
               You haven't reported any issues yet. Start by reporting a problem in your community.
             </p>
             <Button asChild>
-              <Link to="/report">
+              <Link to="/citizen/report">
                 <Plus className="h-4 w-4 mr-2" />
                 Report Your First Issue
               </Link>
