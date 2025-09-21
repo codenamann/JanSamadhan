@@ -24,14 +24,17 @@ export const CitizenAuthProvider = ({ children }) => {
       try {
         // Decode JWT token to get user info
         const payload = JSON.parse(atob(storedToken.split('.')[1]));
+        console.log(payload);
         if (payload.exp * 1000 > Date.now()) {
           setToken(storedToken);
-          setUser({
-            id: payload._id,
+          const newUser = {
+            id: payload.id,
             name: payload.name,
             phone: payload.phone,
             role: payload.role
-          });
+          }
+          setUser(newUser);
+          console.log(newUser);
         } else {
           // Token expired
           localStorage.removeItem('citizen_token');

@@ -11,7 +11,6 @@ import {
   MapPin, 
   Plus, 
   User, 
-  Settings, 
   Bell, 
   Menu, 
   X,
@@ -22,7 +21,6 @@ import {
   AlertCircle,
   Calendar,
   Phone,
-  Mail,
   Home,
   ChevronRight,
   Filter,
@@ -49,6 +47,7 @@ const CitizenDashboard = () => {
   }
 
   // Show error state if no user data
+  console.log(user)
   if (!user) {
     return (
       <div className="min-h-screen flex items-center justify-center">

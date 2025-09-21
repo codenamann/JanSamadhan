@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Camera, RotateCcw, X, Check } from 'lucide-react';
 import { toast } from 'sonner';
+import { createImagePreview, cleanupBlobURLs } from '@/lib/cloudinary';
 
 const CameraCapture = ({ onCapture, onClose, isOpen }) => {
   const videoRef = useRef(null);
@@ -10,6 +11,7 @@ const CameraCapture = ({ onCapture, onClose, isOpen }) => {
   const streamRef = useRef(null);
   const [isStreaming, setIsStreaming] = useState(false);
   const [capturedImage, setCapturedImage] = useState(null);
+  const [capturedFile, setCapturedFile] = useState(null);
   const [facingMode, setFacingMode] = useState('environment'); // Back camera by default
 
   useEffect(() => {
@@ -54,7 +56,7 @@ const CameraCapture = ({ onCapture, onClose, isOpen }) => {
     setIsStreaming(false);
   };
 
-  const capturePhoto = () => {
+  const capturePhoto = async () => {
     if (!videoRef.current || !canvasRef.current) {
       console.error('❌ Video or canvas ref not available');
       return;
@@ -76,32 +78,76 @@ const CameraCapture = ({ onCapture, onClose, isOpen }) => {
 
     console.log('🎨 Canvas drawn, converting to blob...');
 
-    // Convert to blob
-    canvas.toBlob((blob) => {
-      if (blob) {
-        console.log('✅ Blob created:', blob.size, 'bytes');
-        const imageUrl = URL.createObjectURL(blob);
-        console.log('🔗 Image URL created:', imageUrl);
-        setCapturedImage(imageUrl);
-        toast.success('Photo captured successfully!');
-      } else {
-        console.error('❌ Failed to create blob');
-        toast.error('Failed to capture photo');
+    try {
+      // Convert to blob
+      const blob = await new Promise((resolve, reject) => {
+        canvas.toBlob((blob) => {
+          if (blob) {
+            resolve(blob);
+          } else {
+            reject(new Error('Failed to create blob'));
+          }
+        }, 'image/jpeg', 0.8);
+      });
+
+      console.log('✅ Blob created:', blob.size, 'bytes');
+      
+      // Create file from blob
+      const file = new File([blob], `captured-${Date.now()}.jpg`, {
+        type: 'image/jpeg',
+        lastModified: Date.now()
+      });
+
+      // Create image preview with multiple formats
+      const preview = await createImagePreview(file, {
+        useBase64: true,
+        useBlobURL: true,
+        uploadToCloud: false // Don't auto-upload, let user decide
+      });
+
+      if (preview.error) {
+        throw new Error(preview.error);
       }
-    }, 'image/jpeg', 0.8);
+
+      setCapturedFile(file);
+      setCapturedImage(preview.blobURL || preview.base64);
+      toast.success('Photo captured successfully!');
+    } catch (error) {
+      console.error('❌ Failed to capture photo:', error);
+      toast.error('Failed to capture photo');
+    }
   };
 
   const retakePhoto = () => {
-    setCapturedImage(null);
+    // Clean up previous image
     if (capturedImage) {
-      URL.revokeObjectURL(capturedImage);
+      cleanupBlobURLs(capturedImage);
+    }
+    setCapturedImage(null);
+    setCapturedFile(null);
+    
+    // Restart camera to ensure it's available
+    if (isOpen) {
+      stopCamera();
+      setTimeout(() => {
+        startCamera();
+      }, 100);
     }
   };
 
   const confirmPhoto = () => {
-    if (capturedImage) {
-      onCapture(capturedImage);
-      URL.revokeObjectURL(capturedImage);
+    if (capturedFile) {
+      // Pass both file and preview data
+      onCapture({
+        file: capturedFile,
+        preview: capturedImage,
+        base64: capturedImage?.startsWith('data:') ? capturedImage : null
+      });
+      
+      // Clean up blob URL
+      if (capturedImage) {
+        cleanupBlobURLs(capturedImage);
+      }
     }
   };
 

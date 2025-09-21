@@ -81,7 +81,18 @@ export const getComplaintById = async (req, res) => {
 // @access  Public
 export const createComplaint = async (req, res) => {
   try {
-    const { title, description, reporterId, photo, location, priority, category } = req.body;
+    const { 
+      title, 
+      description, 
+      reporterId, 
+      image, 
+      imageUrl, 
+      cloudinaryPublicId,
+      location, 
+      priority, 
+      category,
+      reportedBy
+    } = req.body;
     
     // Validate input data
     const validation = validateComplaintData(req.body);
@@ -92,22 +103,32 @@ export const createComplaint = async (req, res) => {
         details: validation.errors
       });
     }
+    
     if (!location?.lat || !location?.lng) {
       return res.status(400).json({ success: false, error: "Location coordinates required" });
+    }
+    
+    if (!reportedBy?.name || !reportedBy?.email) {
+      return res.status(400).json({ success: false, error: "Reporter information required" });
     }
     
     const complaint = new Complaint({
       title: title.trim(),
       description: description.trim(),
       reporterId: reporterId.trim(),
-      photo: photo,
+      reportedBy: {
+        name: reportedBy.name.trim(),
+        email: reportedBy.email.trim()
+      },
+      image: image || "",
+      imageUrl: imageUrl || "",
+      cloudinaryPublicId: cloudinaryPublicId || "",
       location: {
         lat: location.lat,
-        lon: location.lon,
+        lon: location.lng, // Note: frontend sends 'lng', we store as 'lon'
         address: location.address || ""
-
       },
-      priority: { type: String, enum: ["Low", "Medium", "High"], default: "Medium" },
+      priority: priority || "Medium",
       category: category || "Other"
     });
     

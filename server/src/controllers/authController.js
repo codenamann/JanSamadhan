@@ -36,7 +36,7 @@ export const citizenVerify = async (req, res) => {
         const result = await verifySignin(phone, otp);
         const citizen = await Citizen.findOne({ phone });
         if(result){
-            const token = jwt.sign({ id: citizen._id, role: citizen.role }, process.env.JWT_SECRET, { expiresIn: '1d' });
+            const token = jwt.sign({ id: citizen._id, phone:citizen.phone, name:citizen.name, role: citizen.role }, process.env.JWT_SECRET, { expiresIn: '1d' });
             const user = { id: citizen._id, name: citizen.name, phone: citizen.phone, role: citizen.role };
             res.status(201).json({success:true, message: "Signin complete", token, user });
         }else{

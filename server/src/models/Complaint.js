@@ -21,9 +21,29 @@ const complaintSchema = new mongoose.Schema(
       required: [true, "Reporter ID is required"],
       trim: true
     },
-    photo: { 
+    reportedBy: {
+      name: {
+        type: String,
+        required: true,
+        trim: true
+      },
+      email: {
+        type: String,
+        required: true,
+        trim: true
+      }
+    },
+    image: { 
       type: String, 
       default: "" 
+    },
+    imageUrl: {
+      type: String,
+      default: ""
+    },
+    cloudinaryPublicId: {
+      type: String,
+      default: ""
     },
     location: {
       lat: { 

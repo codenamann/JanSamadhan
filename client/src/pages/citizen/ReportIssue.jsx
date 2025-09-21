@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -27,8 +27,10 @@ import {
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import CameraCapture from '@/components/Camera/CameraCapture';
+import ImagePreview from '@/components/ui/ImagePreview';
 import { useLocation } from '@/hooks/useLocation';
 import { useCitizenAuth } from '@/context/CitizenAuthContext';
+import { uploadImage } from '@/lib/apiImages';
 
 const ReportIssue = () => {
   const navigate = useNavigate();
@@ -38,8 +40,11 @@ const ReportIssue = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [showCamera, setShowCamera] = useState(false);
   const [capturedImage, setCapturedImage] = useState(null);
+  const [capturedFile, setCapturedFile] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [uploadedImageUrl, setUploadedImageUrl] = useState(null);
   const [permissionsGranted, setPermissionsGranted] = useState(false);
+  const value = useContext(CitizenAuthContext);
   
   const [form, setForm] = useState({
     title: '',
@@ -48,6 +53,7 @@ const ReportIssue = () => {
     priority: 'medium',
     location: null,
     image: null,
+    imageFile: null,
     reporterName: user?.name || '',
     reporterEmail: user?.email || ''
   });
@@ -63,15 +69,15 @@ const ReportIssue = () => {
   useEffect(() => {
     const requestPermissions = async () => {
       try {
-        console.log('🚀 Starting permission request...');
+        console.log('Starting permission request...');
         // Request location permission first
         await getCurrentLocation();
         setPermissionsGranted(true);
         setCurrentStep(2); // Move to camera step
         setShowCamera(true);
-        console.log('✅ Permissions granted, moving to camera step');
+        console.log('Permissions granted, moving to camera step');
       } catch (error) {
-        console.error('❌ Permission request failed:', error);
+        console.error('Permission request failed:', error);
         toast.error('Please allow location access to continue');
         setCurrentStep(1);
       }
@@ -87,10 +93,11 @@ const ReportIssue = () => {
     }
   }, [location]);
 
-  const handleCameraCapture = (imageUrl) => {
-    console.log('📸 Image captured:', imageUrl);
-    setCapturedImage(imageUrl);
-    setForm(prev => ({ ...prev, image: imageUrl }));
+  const handleCameraCapture = (imageData) => {
+    console.log('Image captured:', imageData);
+    setCapturedImage(imageData.preview);
+    setCapturedFile(imageData.file);
+    setForm(prev => ({ ...prev, image: imageData.preview, imageFile: imageData.file }));
     setShowCamera(false);
     setCurrentStep(3);
     toast.success('Photo captured successfully!');
@@ -98,7 +105,8 @@ const ReportIssue = () => {
 
   const retakePhoto = () => {
     setCapturedImage(null);
-    setForm(prev => ({ ...prev, image: null }));
+    setCapturedFile(null);
+    setForm(prev => ({ ...prev, image: null, imageFile: null }));
     setShowCamera(true);
   };
 
@@ -109,52 +117,90 @@ const ReportIssue = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    console.log('📝 Form submission started with data:', form);
-    console.log('📸 Captured image:', capturedImage);
-    console.log('📍 Location data:', form.location);
+    console.log('Form submission started with data:', form);
+    console.log('Captured image:', capturedImage);
+    console.log('Location data:', form.location);
     
     if (!form.title || !form.description || !form.category) {
-      console.log('❌ Missing required fields');
+      console.log('Missing required fields');
       toast.error('Please fill in all required fields');
       return;
     }
 
     if (!form.location) {
-      console.log('❌ Missing location');
+      console.log('Missing location');
       toast.error('Location is required');
       return;
     }
 
     if (!form.image) {
-      console.log('❌ Missing image');
+      console.log('Missing image');
       toast.error('Photo is required');
       return;
     }
 
     setIsSubmitting(true);
-    console.log('🚀 Submitting form...');
+    console.log('Submitting form...');
 
     try {
-      // Simulate API call - in real app, send to backend
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      let finalImageUrl = form.image;
       
-      const issueId = Math.random().toString(36).substr(2, 9).toUpperCase();
+      // If we have a file but no cloud URL, upload it first
+      if (capturedFile && !uploadedImageUrl) {
+        console.log('Uploading image to Cloudinary...');
+        toast.loading('Uploading image...', { id: 'image-upload' });
+        
+        const uploadResult = await uploadImage(capturedFile);
+        
+        if (uploadResult.success) {
+          finalImageUrl = uploadResult.data.url;
+          console.log('Image uploaded successfully:', finalImageUrl);
+          toast.success('Image uploaded successfully!', { id: 'image-upload' });
+        } else {
+          throw new Error(uploadResult.error || 'Image upload failed');
+        }
+      }
       
-      console.log('✅ Issue submitted successfully with ID:', issueId);
-      console.log('📊 Final issue data:', {
-        id: issueId,
+      // Prepare issue data
+      const issueData = {
         title: form.title,
         description: form.description,
         category: form.category,
         priority: form.priority,
         location: form.location,
-        image: form.image,
+        image: finalImageUrl,
         reportedBy: {
-          name: form.reporterName,
+          name: value.name,
           email: form.reporterEmail
         },
         createdAt: new Date().toISOString()
+      };
+      
+      console.log('Final issue data:', issueData);
+      
+      // Send to backend API
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api'}/complaints`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ...issueData,
+          reporterId: user?.id || 'anonymous',
+          imageUrl: finalImageUrl,
+          cloudinaryPublicId: finalImageUrl ? finalImageUrl.split('/').pop().split('.')[0] : null
+        })
       });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to submit complaint');
+      }
+
+      const result = await response.json();
+      const issueId = result.data._id;
+      
+      console.log('Issue submitted successfully with ID:', issueId);
       
       toast.success('Issue reported successfully!', {
         description: `Your report has been submitted with ID #${issueId}`
@@ -163,13 +209,13 @@ const ReportIssue = () => {
       // Clean up captured image
       if (capturedImage) {
         URL.revokeObjectURL(capturedImage);
-        console.log('🧹 Cleaned up captured image');
+        console.log('Cleaned up captured image');
       }
       
       // Navigate back to dashboard
       navigate('/citizen/dashboard', { replace: true });
     } catch (error) {
-      console.error('❌ Form submission failed:', error);
+      console.error('Form submission failed:', error);
       toast.error('Failed to submit report. Please try again.');
     } finally {
       setIsSubmitting(false);
@@ -190,7 +236,7 @@ const ReportIssue = () => {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="bg-card/90 border-b border-border sticky top-0 z-40 backdrop-blur-sm">
+      <header className="bg-background/90 border-b border-border sticky top-0 z-40 backdrop-blur-sm">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
@@ -295,32 +341,23 @@ const ReportIssue = () => {
                 </p>
               </div>
 
-              {capturedImage && (
-                <div className="space-y-4">
-                  <div className="text-center">
-                    <p className="text-sm text-muted-foreground mb-2">Captured Image Preview:</p>
-                    <img 
-                      src={capturedImage} 
-                      alt="Captured issue" 
-                      className="w-full max-w-md mx-auto rounded-lg border"
-                      onLoad={() => console.log('✅ Image loaded successfully')}
-                      onError={(e) => console.error('❌ Image failed to load:', e)}
-                    />
-                  </div>
-                  <div className="flex space-x-2">
-                    <Button variant="outline" onClick={retakePhoto} className="flex-1">
-                      <Camera className="h-4 w-4 mr-2" />
-                      Retake
-                    </Button>
-                    <Button onClick={() => setCurrentStep(3)} className="flex-1">
-                      <CheckCircle className="h-4 w-4 mr-2" />
-                      Use This Photo
-                    </Button>
-                  </div>
-                </div>
-              )}
+               {capturedFile && (
+                 <div className="space-y-4">
+                   <div className="text-center">
+                     <p className="text-sm text-muted-foreground mb-2">Captured Image Preview:</p>
+                     <ImagePreview
+                       file={capturedFile}
+                       onRetake={retakePhoto}
+                       onConfirm={() => setCurrentStep(3)}
+                       showControls={true}
+                       previewSize="medium"
+                       className="mx-auto"
+                     />
+                   </div>
+                 </div>
+               )}
 
-              {!capturedImage && (
+              {!capturedFile && (
                 <Button onClick={() => setShowCamera(true)} className="w-full">
                   <Camera className="h-4 w-4 mr-2" />
                   Open Camera
@@ -341,30 +378,24 @@ const ReportIssue = () => {
             </CardHeader>
             <CardContent>
               <form onSubmit={(e) => { e.preventDefault(); setCurrentStep(4); }} className="space-y-6">
-                {/* Photo Preview */}
-                {capturedImage && (
-                  <div className="space-y-2">
-                    <Label>Captured Photo</Label>
-                    <div className="relative">
-                      <img 
-                        src={capturedImage} 
-                        alt="Captured issue" 
-                        className="w-full h-48 object-cover rounded-lg border"
-                        onLoad={() => console.log('✅ Form image loaded successfully')}
-                        onError={(e) => console.error('❌ Form image failed to load:', e)}
-                      />
-                      <Button
-                        type="button"
-                        variant="destructive"
-                        size="sm"
-                        className="absolute top-2 right-2"
-                        onClick={retakePhoto}
-                      >
-                        <X className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </div>
-                )}
+                 {/* Photo Preview */}
+                 {capturedFile && (
+                   <div className="space-y-2">
+                     <Label>Captured Photo</Label>
+                     <ImagePreview
+                       file={capturedFile}
+                       onRetake={retakePhoto}
+                       onRemove={retakePhoto}
+                       showControls={true}
+                       previewSize="medium"
+                     />
+                     
+                     {/* Image will be automatically uploaded on form submission */}
+                     <div className="text-sm text-muted-foreground">
+                       <p>Image will be automatically uploaded when you submit the form</p>
+                     </div>
+                   </div>
+                 )}
 
                 {/* Location Display */}
                 {form.location && (
@@ -399,7 +430,7 @@ const ReportIssue = () => {
                 <div className="space-y-2">
                   <Label htmlFor="category">Category *</Label>
                   <Select value={form.category} onValueChange={(value) => handleFormChange('category', value)}>
-                    <SelectTrigger>
+                    <SelectTrigger className='bg-background'>
                       <SelectValue placeholder="Select category" />
                     </SelectTrigger>
                     <SelectContent>
@@ -452,19 +483,20 @@ const ReportIssue = () => {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
-              {/* Photo Preview */}
-              {capturedImage && (
-                <div className="space-y-2">
-                  <Label>Photo</Label>
-                  <img 
-                    src={capturedImage} 
-                    alt="Captured issue" 
-                    className="w-full h-48 object-cover rounded-lg border"
-                    onLoad={() => console.log('✅ Review image loaded successfully')}
-                    onError={(e) => console.error('❌ Review image failed to load:', e)}
-                  />
-                </div>
-              )}
+               {/* Photo Preview */}
+               {capturedFile && (
+                 <div className="space-y-2">
+                   <Label>Photo</Label>
+                   <ImagePreview
+                     file={capturedFile}
+                     showControls={false}
+                     previewSize="medium"
+                   />
+                   <div className="text-sm text-muted-foreground">
+                     <p>📸 Image will be automatically uploaded to cloud storage</p>
+                   </div>
+                 </div>
+               )}
 
               {/* Issue Details */}
               <div className="space-y-4">

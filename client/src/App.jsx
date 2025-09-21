@@ -29,7 +29,6 @@ const App = () => (
           <AuthorityAuthProvider>
             <IssueProvider>
               <Routes>
-                {/* <Route path="/" element={<Landing />} /> */}
                 {/* Citizen */}
                 <Route path="/citizen/login" element={<CitizenLogin />} />
                 <Route 
@@ -54,8 +53,6 @@ const App = () => (
                 {/* Legacy/demo routes */}
                 <Route path='/' element={<JanSamadhanUI />} />
                 <Route path="/PublicMap" element={<PublicMap />} />
-                <Route path="/dashboard" element={<Dashboard />} />
-                <Route path="/report" element={<ReportIssue />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>

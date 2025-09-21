@@ -15,16 +15,10 @@ export default function JanSamadhanUI() {
     <div className="bg-background min-h-screen px-4 py-6">
       <div className="max-w-6xl mx-auto rounded-2xl shadow-lg p-6 md:p-10">
         {/* Navbar */}
-        <div className="flex flex-wrap justify-between items-center gap-4 mb-14 md:mb-28">
+        <div className="flex justify-between items-center gap-4 mb-14 md:mb-28">
           <Logo link={LogoImage} alt="Jan Samadhan Logo" />
-          <div className="flex flex-wrap gap-6 text-gray-700 font-medium">
-            <a href="#" className="hover:text-orange-700">Home</a>
-            <a href="#" className="hover:text-orange-700">Source</a>
-            <a href="#" className="hover:text-orange-700">Measure</a>
-            <a href="#" className="hover:text-orange-700">Outline</a>
-          </div>
-          <div className="flex items-center gap-2 w-full sm:w-auto">
-            <Button className='' onClick={() => SignupRef.current?.scrollIntoView()}>
+          <div className="flex items-center gap-2 sm:w-auto">
+            <Button size='sm' onClick={() => SignupRef.current?.scrollIntoView()}>
               Signup
             </Button>
           </div>

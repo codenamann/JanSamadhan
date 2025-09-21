@@ -5,7 +5,8 @@ import morgan from "morgan";
 import connectDB from "./config/db.js";
 import complaintRoutes from "./routes/complaintRoutes.js";
 import { requestLogger, errorLogger } from "./middleware/logger.js";
-import authRoutes from './routes/auth.js'
+import authRoutes from './routes/auth.js';
+import imageRoutes from './routes/imageRoutes.js';
 
 // Load environment variables
 dotenv.config();
@@ -60,7 +61,8 @@ app.get("/api/health", (req, res) => {
 
 // API Routes
 app.use("/api/complaints", complaintRoutes);
-app.use('/api/auth', authRoutes)
+app.use('/api/auth', authRoutes);
+app.use('/api/images', imageRoutes);
 
 // 404 handler for undefined routes
 app.use("*", (req, res) => {
@@ -74,7 +76,10 @@ app.use("*", (req, res) => {
       "POST /api/complaints",
       "GET /api/complaints/:id",
       "PUT /api/complaints/:id",
-      "DELETE /api/complaints/:id"
+      "DELETE /api/complaints/:id",
+      "POST /api/images/upload",
+      "DELETE /api/images/:publicId",
+      "GET /api/images/:publicId/info"
     ]
   });
 });
