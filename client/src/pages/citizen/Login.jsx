@@ -1,20 +1,26 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Link, useNavigate } from 'react-router-dom';
-import { set } from 'date-fns';
 import { citizenOTPApi, citizenSubmitName, citizenVerifyOTP } from '@/lib/apiCitizen';
 import { useCitizenAuth } from '@/context/CitizenAuthContext';
 
 const CitizenLogin = () => {
   const navigate = useNavigate();
-  const { login } = useCitizenAuth();
+  const { user, login } = useCitizenAuth();
   const [step, setStep] = useState(1); // 1 = phone entry, 2 = otp entry
   const [citizen, setCitizen] = useState({});
   const [otp, setOtp] = useState('');
   const [loading, setLoading] = useState(false);
+  
+  useEffect(() => {
+    if (user) {
+      // Redirect logged-in users to dashboard and replace history so back button won't go to login
+      navigate('/citizen/dashboard', { replace: true });
+    }
+  }, [user]);
 
   const handlePhoneSubmit = async (e) => {
     e.preventDefault();

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -20,7 +20,7 @@ import Logo from '@/components/ui/logo';
 
 const AuthorityLogin = () => {
   const navigate = useNavigate();
-  const { sendOTP, verifyOTP, loading } = useAuthorityAuth();
+  const { user, sendOTP, verifyOTP, loading } = useAuthorityAuth();
   
   const [step, setStep] = useState(1); // 1: Email, 2: OTP
   const [email, setEmail] = useState('');
@@ -28,6 +28,13 @@ const AuthorityLogin = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [otpSent, setOtpSent] = useState(false);
+
+  useEffect(() => {
+    if (user) {
+      // Redirect logged-in users to dashboard and replace history so back button won't go to login
+      navigate('/authority/dashboard', { replace: true });
+    }
+  }, [user]);
 
   const handleEmailSubmit = async (e) => {
     e.preventDefault();
