@@ -95,8 +95,8 @@ app.use((error, req, res, next) => {
 // Start server
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
-  console.log(`API Documentation: http://localhost:${PORT}`);
-  console.log(`Health Check: http://localhost:${PORT}/api/health`);
+  console.log(`API Documentation: https://jansamadhan.onrender.com`);
+  console.log(`Health Check:  https://jansamadhan.onrender.com/api/health`);
   console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
 });
 
