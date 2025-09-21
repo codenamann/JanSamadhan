@@ -8,8 +8,7 @@ const complaintSchema = new mongoose.Schema(
       trim: true
     },
     description: { 
-      type: String, 
-      required: [true, "Please provide a description for the complaint"],
+      type: String,
       trim: true
     },
     status: { 

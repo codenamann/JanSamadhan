@@ -1,5 +1,5 @@
 import Citizen from "../models/Citizen.js";
-import { generateOTP, saveOTP, saveTempOTP } from "./otp.js";
+import { generateOTP, saveOTP, saveTempOTP, verifyOTP } from "./otp.js";
 
 export const citizenSignup = async (phone) => {
     const otp = generateOTP();
@@ -21,8 +21,32 @@ export const sendOTP = async (phone) => {
 };
 
 export const getOTP = async (phone) => {
-    const citizen = Citizen.findOne({ phone });
+    const citizen = await Citizen.findOne({ phone });
     const otp = generateOTP();
     await citizen.setOtp(otp, 300);
     return otp;
+}
+
+export const verifySignin = async (phone, otp) => {
+    console.log("Verifying signin for", phone, "with", otp);
+    const citizen = await Citizen.findOne({ phone });
+    console.log(citizen);
+    const isValid = await citizen.verifyOtp(otp);
+    console.log("isValid:", isValid);
+    if(isValid){
+        return true;
+    }
+    else{
+        return false;
+    }
+}
+
+export const verifySignup = async (phone, otp) => {
+    const isValid = await verifyOTP(phone, otp, true);
+    if(isValid){
+        return true
+    }
+    else{
+        return false
+    } 
 }

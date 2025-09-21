@@ -48,7 +48,6 @@ citizenSchema.methods.verifyOtp = async function (otpCode) {
   if (this.otpExpiresAt.getTime() < Date.now()) return false;
 
   const isMatch = await bcrypt.compare(otpCode, this.otpHash);
-
   if (!isMatch) {
     this.otpAttemptCount += 1;
     await this.save();

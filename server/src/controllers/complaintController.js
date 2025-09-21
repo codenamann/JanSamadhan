@@ -92,14 +92,22 @@ export const createComplaint = async (req, res) => {
         details: validation.errors
       });
     }
+    if (!location?.lat || !location?.lng) {
+      return res.status(400).json({ success: false, error: "Location coordinates required" });
+    }
     
     const complaint = new Complaint({
       title: title.trim(),
       description: description.trim(),
       reporterId: reporterId.trim(),
-      photo: photo || "",
-      location,
-      priority: priority || "Medium",
+      photo: photo,
+      location: {
+        lat: location.lat,
+        lon: location.lon,
+        address: location.address || ""
+
+      },
+      priority: { type: String, enum: ["Low", "Medium", "High"], default: "Medium" },
       category: category || "Other"
     });
     

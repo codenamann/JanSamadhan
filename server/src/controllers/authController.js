@@ -1,8 +1,9 @@
 import Citizen from "../models/Citizen.js";
 import jwt from "jsonwebtoken";
-import { citizenSignup, getOTP, isPhoneRegistered, sendOTP } from "../utils/citizen.js";
+import { citizenSignup, getOTP, isPhoneRegistered, sendOTP, verifySignin, verifySignup } from "../utils/citizen.js";
 import { verifyOTP } from "../utils/otp.js";
 import { token } from "morgan";
+import TempUser from "../models/TempUser.js";
 // import sendSMS from './utils/sendSMS.js';
 
 export const citizenSignin = async (req, res) => {
@@ -27,12 +28,34 @@ export const citizenVerify = async (req, res) => {
     if(!citizenExists) {
         const result = await verifySignup(phone, otp);
         if (result) {
-            return res.status(200).json({ success: true, message: "Account created successfully", new: true });
+            res.status(200).json({ success: true, message: "Account created successfully", new: true });
         } else {
-            return res.status(400).json({ success: false, message: "Account creation failed" });
+            res.status(400).json({ success: false, message: "Account creation failed" });
         }
-          
+    }else{
+        const result = await verifySignin(phone, otp);
+        const citizen = await Citizen.findOne({ phone });
+        if(result){
+            const token = jwt.sign({ id: citizen._id, role: citizen.role }, process.env.JWT_SECRET, { expiresIn: '1d' });
+            const user = { id: citizen._id, name: citizen.name, phone: citizen.phone, role: citizen.role };
+            res.status(201).json({success:true, message: "Signin complete", token, user });
+        }else{
+            res.status(400).json({success:false, message: "Invalid or expired OTP" });
+        }
     }
+}
+
+export const citizenSubmitName = async (req, res) => {
+    const { phone, name } = req.body;
+    if (!phone || !name) return res.status(400).json({success:false, message: "Phone or name is missing." });
+    const record = await TempUser.findOne({ phone });
+    if (!record) return res.status(400).json({success:false, message: "Record not found" });
+    await record.deleteOne();
+    const newCitizen = new Citizen({ phone, name, isPhoneVerified: true });
+
+    await newCitizen.save();
+    const token = jwt.sign({ id: newCitizen._id, role: newCitizen.role, phone:newCitizen.phone }, process.env.JWT_SECRET, { expiresIn: '1d' });
+    res.status(201).json({success:true, message: "Signup complete", token,  });
 }
 
 export const resendOTP = async (req, res) => {
@@ -46,29 +69,6 @@ export const resendOTP = async (req, res) => {
         console.log(`OTP resent to phone: ${otp}`);
         return res.status(200).json({success:true, message: "OTP resent to phone" });
     }
-}
-
-export const verifySignin = async (req, res) => {
-    const { phone, otp } = req.body;
-    const citizen = await Citizen.findOne({ phone });
-    const isValid = await citizen.verifyOTP(otp);
-    if(isValid){
-        const token = jwt.sign({ id: citizen._id, role: citizen.role }, process.env.JWT_SECRET, { expiresIn: '1d' });
-        res.status(201).json({success:true, message: "Signin complete", token });
-    }
-    else{
-        res.status(400).json({success:false, message: "Invalid or expired OTP" });
-    }
-}
-
-export const verifySignup = async (phone, otp) => {
-    const isValid = await verifyOTP(phone, otp, true);
-    if(isValid){
-        return true
-    }
-    else{
-        return false
-    } 
 }
 
 export const getName = async (req, res) => {
