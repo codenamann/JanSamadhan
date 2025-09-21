@@ -83,10 +83,8 @@ export const createComplaint = async (req, res) => {
   try {
     const { 
       title, 
-      description, 
-      reporterId, 
+      description,
       image, 
-      imageUrl, 
       cloudinaryPublicId,
       location, 
       priority, 
@@ -95,23 +93,24 @@ export const createComplaint = async (req, res) => {
     } = req.body;
     
     if (!location?.lat || !location?.lng) {
+      console.log("Missing location data:", location);
       return res.status(400).json({ success: false, error: "Location coordinates required" });
     }
     
-    if (!reportedBy?.name || !reportedBy?.email) {
+    if (!reportedBy?.name || !reportedBy?.phone) {
+      console.log("Missing reporter data:", reportedBy);
       return res.status(400).json({ success: false, error: "Reporter information required" });
     }
     
     const complaint = new Complaint({
       title: title.trim(),
       description: description.trim(),
-      reporterId: reporterId.trim(),
       reportedBy: {
         name: reportedBy.name.trim(),
-        email: reportedBy.email.trim()
+        phone: reportedBy.phone.trim(),
+        id: reportedBy.id
       },
       image: image || "",
-      imageUrl: imageUrl || "",
       cloudinaryPublicId: cloudinaryPublicId || "",
       location: {
         lat: location.lat,
@@ -135,6 +134,7 @@ export const createComplaint = async (req, res) => {
     
     // Handle validation errors
     if (error.name === 'ValidationError') {
+      console.log("Validation error details:", error.errors);
       const validationErrors = Object.values(error.errors).map(err => err.message);
       return res.status(400).json({ 
         success: false,

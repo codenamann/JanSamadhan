@@ -16,30 +16,26 @@ const complaintSchema = new mongoose.Schema(
       enum: ["Pending", "In Progress", "Resolved"], 
       default: "Pending" 
     },
-    reporterId: { 
-      type: String, 
-      required: [true, "Reporter ID is required"],
-      trim: true
-    },
     reportedBy: {
       name: {
         type: String,
         required: true,
         trim: true
       },
-      email: {
+      phone: {
         type: String,
-        required: true,
-        trim: true
+        trim: true,
+        default: ""
+      },
+      id : {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        required: true
       }
     },
     image: { 
       type: String, 
       default: "" 
-    },
-    imageUrl: {
-      type: String,
-      default: ""
     },
     cloudinaryPublicId: {
       type: String,
@@ -54,6 +50,11 @@ const complaintSchema = new mongoose.Schema(
         type: Number, 
         required: [true, "Longitude is required"] 
       },
+      address: {
+        type: String,
+        trim: true,
+        default: ""
+      }
     },
     priority: {
       type: String,

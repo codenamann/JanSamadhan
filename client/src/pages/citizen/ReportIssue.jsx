@@ -52,7 +52,7 @@ const ReportIssue = () => {
     title: '',
     description: '',
     category: '',
-    priority: 'medium',
+    priority: 'Medium',
     location: null,
     image: null,
     imageFile: null,
