@@ -1,7 +1,9 @@
 import axios from "axios";
-const apiUrl = import.meta.env.SERVER_URL;
+const apiUrl = import.meta.env.VITE_SERVER_URL;
+console.log("API URL:", apiUrl);
 
 export const citizenOTPApi = async(phone) =>{
+    console.log('api call :',phone);
     const response = await axios.post(`${apiUrl}/api/auth/citizen/login`, {phone});
     return response.data;
 }
