@@ -34,7 +34,6 @@ export const CitizenAuthProvider = ({ children }) => {
             role: payload.role
           }
           setUser(newUser);
-          console.log(newUser);
         } else {
           // Token expired
           localStorage.removeItem('citizen_token');

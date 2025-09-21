@@ -12,7 +12,7 @@ export const uploadImage = async (file, options = {}) => {
     // Convert file to base64
     const base64 = await fileToBase64(file);
     
-    const response = await fetch(`${API_BASE_URL}/images/upload`, {
+    const response = await fetch(`${API_BASE_URL}/api/images/upload`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -30,7 +30,6 @@ export const uploadImage = async (file, options = {}) => {
     const result = await response.json();
     return result;
   } catch (error) {
-    console.error('Image upload error:', error);
     return {
       success: false,
       error: error.message
@@ -45,7 +44,7 @@ export const uploadImage = async (file, options = {}) => {
  */
 export const deleteImage = async (publicId) => {
   try {
-    const response = await fetch(`${API_BASE_URL}/images/${publicId}`, {
+    const response = await fetch(`${API_BASE_URL}/api/images/${publicId}`, {
       method: 'DELETE',
     });
 
@@ -71,7 +70,7 @@ export const deleteImage = async (publicId) => {
  */
 export const getImageInfo = async (publicId) => {
   try {
-    const response = await fetch(`${API_BASE_URL}/images/${publicId}/info`);
+    const response = await fetch(`${API_BASE_URL}/api/images/${publicId}/info`);
 
     if (!response.ok) {
       throw new Error(`Get info failed: ${response.statusText}`);

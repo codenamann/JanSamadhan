@@ -31,6 +31,8 @@ import ImagePreview from '@/components/ui/ImagePreview';
 import { useLocation } from '@/hooks/useLocation';
 import { useCitizenAuth } from '@/context/CitizenAuthContext';
 import { uploadImage } from '@/lib/apiImages';
+import { name } from '@cloudinary/url-gen/actions/namedTransformation';
+import axios from 'axios';
 
 const ReportIssue = () => {
   const navigate = useNavigate();
@@ -44,7 +46,7 @@ const ReportIssue = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [uploadedImageUrl, setUploadedImageUrl] = useState(null);
   const [permissionsGranted, setPermissionsGranted] = useState(false);
-  const value = useContext(CitizenAuthContext);
+  const value = useCitizenAuth();
   
   const [form, setForm] = useState({
     title: '',
@@ -179,26 +181,23 @@ const ReportIssue = () => {
       console.log('Final issue data:', issueData);
       
       // Send to backend API
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api'}/complaints`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
+      const response = await axios.post(`${import.meta.env.VITE_SERVER_URL }/api/complaints`,{
           ...issueData,
-          reporterId: user?.id || 'anonymous',
-          imageUrl: finalImageUrl,
+          reportedBy: {
+            id : user?.id,
+            name: user?.name,
+            phone: user?.phone,
+          },
+          image: finalImageUrl,
           cloudinaryPublicId: finalImageUrl ? finalImageUrl.split('/').pop().split('.')[0] : null
-        })
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to submit complaint');
+        });
+      console.log('Server response:', response.data);
+      if (!response.data?.success) {
+        console.log('Complaint submission failed:', response.error);
+        throw new Error(response.error || 'Failed to submit complaint');
       }
 
-      const result = await response.json();
-      const issueId = result.data._id;
+      const issueId = response.data._id;
       
       console.log('Issue submitted successfully with ID:', issueId);
       
@@ -434,11 +433,11 @@ const ReportIssue = () => {
                       <SelectValue placeholder="Select category" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="infrastructure">Infrastructure</SelectItem>
-                      <SelectItem value="sanitation">Sanitation</SelectItem>
-                      <SelectItem value="safety">Safety</SelectItem>
-                      <SelectItem value="environment">Environment</SelectItem>
-                      <SelectItem value="transportation">Transportation</SelectItem>
+                      <SelectItem value="Infrastructure">Infrastructure</SelectItem>
+                      <SelectItem value="Sanitation">Sanitation</SelectItem>
+                      <SelectItem value="Safety">Safety</SelectItem>
+                      <SelectItem value="Environment">Environment</SelectItem>
+                      <SelectItem value="Transportation">Transportation</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>

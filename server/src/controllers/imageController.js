@@ -26,6 +26,7 @@ export const uploadImage = async (req, res) => {
     });
 
     if (!result.success) {
+      console.log('Cloudinary upload failed:', result.error);
       return res.status(500).json({
         success: false,
         error: result.error

@@ -1,14 +1,15 @@
 import React from 'react';
-import { statusLabels, categoryLabels } from '@/data/mockData';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Calendar, MapPin, User, AlertCircle } from 'lucide-react';
+import { Calendar, MapPin, User, AlertCircle, Shield } from 'lucide-react';
 
 const IssueCard = ({ 
   issue, 
   onViewDetails, 
   onStatusChange,
+  onAssignToAuthority,
+  showAuthorityButton = false,
   userRole = 'citizen'
 }) => {
   const formatDate = (dateString) => {
@@ -22,15 +23,28 @@ const IssueCard = ({
   const getPriorityColor = (priority) => {
     switch (priority) {
       case 'critical':
-        return 'bg-critical text-critical-foreground';
+        return 'bg-red-100 text-red-800 border-red-200';
       case 'high':
-        return 'bg-warning text-warning-foreground';
+        return 'bg-orange-100 text-orange-800 border-orange-200';
       case 'medium':
-        return 'bg-primary text-primary-foreground';
+        return 'bg-yellow-100 text-yellow-800 border-yellow-200';
       case 'low':
-        return 'bg-muted text-muted-foreground';
+        return 'bg-green-100 text-green-800 border-green-200';
       default:
-        return 'bg-muted text-muted-foreground';
+        return 'bg-gray-100 text-gray-800 border-gray-200';
+    }
+  };
+
+  const getStatusColor = (status) => {
+    switch (status) {
+      case 'Pending':
+        return 'bg-red-100 text-red-800 border-red-200';
+      case 'In Progress':
+        return 'bg-yellow-100 text-yellow-800 border-yellow-200';
+      case 'Resolved':
+        return 'bg-green-100 text-green-800 border-green-200';
+      default:
+        return 'bg-gray-100 text-gray-800 border-gray-200';
     }
   };
 
@@ -45,11 +59,11 @@ const IssueCard = ({
           <div className="flex-1">
             <h3 className="font-semibold text-lg leading-tight mb-2">{issue.title}</h3>
             <div className="flex flex-wrap gap-2">
-              <Badge className={`status-badge ${issue.status}`}>
-                {statusLabels[issue.status]}
+              <Badge className={getStatusColor(issue.status)}>
+                {issue.status}
               </Badge>
               <Badge variant="secondary">
-                {categoryLabels[issue.category]}
+                {issue.category}
               </Badge>
               <Badge className={getPriorityColor(issue.priority)}>
                 {issue.priority}
@@ -67,9 +81,9 @@ const IssueCard = ({
           {issue.description}
         </p>
 
-        {issue.images.length > 0 && (
+        {issue.image && (
           <img 
-            src={issue.images[0]} 
+            src={issue.image} 
             alt={issue.title}
             className="w-full h-48 object-cover rounded-md"
           />
@@ -78,7 +92,7 @@ const IssueCard = ({
         <div className="space-y-2 text-sm">
           <div className="flex items-center gap-2 text-muted-foreground">
             <MapPin className="h-4 w-4" />
-            <span className="truncate">{issue.location.address}</span>
+            <span className="truncate">Lat: {issue.location.lat.toFixed(4)}, Lng: {issue.location.lon.toFixed(4)}</span>
           </div>
           
           <div className="flex items-center gap-2 text-muted-foreground">
@@ -90,26 +104,7 @@ const IssueCard = ({
             <Calendar className="h-4 w-4" />
             <span>Created {formatDate(issue.createdAt)}</span>
           </div>
-
-          {issue.assignedTo && (
-            <div className="flex items-center gap-2 text-muted-foreground">
-              <User className="h-4 w-4" />
-              <span>Assigned to {issue.assignedTo.name} ({issue.assignedTo.department})</span>
-            </div>
-          )}
         </div>
-
-        {issue.citizenVerification && (
-          <div className="p-3 bg-muted rounded-lg">
-            <div className="text-sm font-medium mb-1">Citizen Verification</div>
-            <div className="text-sm text-muted-foreground">
-              Status: <span className="capitalize">{issue.citizenVerification.status}</span>
-              {issue.citizenVerification.comments && (
-                <div className="mt-1 italic">"{issue.citizenVerification.comments}"</div>
-              )}
-            </div>
-          </div>
-        )}
 
         <div className="flex gap-2 pt-2">
           <Button 
@@ -120,35 +115,16 @@ const IssueCard = ({
             View Details
           </Button>
           
-          {canChangeStatus && issue.status !== 'closed' && (
+          {showAuthorityButton && (
             <Button 
-              variant="default"
-              onClick={() => {
-                const nextStatus = issue.status === 'open' ? 'in-progress' : 'resolved';
-                onStatusChange?.(issue.id, nextStatus);
-              }}
+              variant="default" 
+              size="sm"
+              onClick={() => onAssignToAuthority?.(issue)}
+              className="bg-blue-600 hover:bg-blue-700"
             >
-              {issue.status === 'open' ? 'Start Work' : 'Mark Resolved'}
+              <Shield className="h-4 w-4 mr-1" />
+              Assign
             </Button>
-          )}
-
-          {canVerify && (
-            <div className="flex gap-1">
-              <Button 
-                variant="default"
-                size="sm"
-                onClick={() => onStatusChange?.(issue.id, 'closed')}
-              >
-                Verify Fixed
-              </Button>
-              <Button 
-                variant="outline"
-                size="sm"
-                onClick={() => onStatusChange?.(issue.id, 'open')}
-              >
-                Reopen
-              </Button>
-            </div>
           )}
         </div>
       </CardContent>

@@ -23,7 +23,6 @@ export const uploadToCloudinary = async (file, options = {}) => {
       folder: 'jan-samadhan/issues',
       resource_type: 'auto',
       quality: 'auto',
-      format: 'auto',
       ...options
     };
 

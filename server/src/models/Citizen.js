@@ -17,7 +17,22 @@ const citizenSchema = new Schema(
 
     // Status flags
     isPhoneVerified: { type: Boolean, default: false },
-    lastLoginAt: { type: Date }
+    lastLoginAt: { type: Date },
+
+    // Notifications
+    notifications: [{
+      id: { type: String, required: true },
+      type: { 
+        type: String, 
+        enum: ['complaint_status', 'complaint_resolved', 'otp', 'general'],
+        required: true 
+      },
+      title: { type: String, required: true },
+      message: { type: String, required: true },
+      complaintId: { type: String },
+      isRead: { type: Boolean, default: false },
+      createdAt: { type: Date, default: Date.now }
+    }]
   },
   { timestamps: true }
 );

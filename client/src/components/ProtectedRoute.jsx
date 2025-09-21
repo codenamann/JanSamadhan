@@ -19,8 +19,8 @@ const ProtectedRoute = ({ children, role }) => {
 
   // Check if user is authenticated based on role
   const isAuthenticated = role === 'citizen' 
-    ? citizenAuth.isAuthenticated() 
-    : authorityAuth.isAuthenticated();
+    ? citizenAuth.isAuthenticated 
+    : authorityAuth.isAuthenticated;
 
   if (!isAuthenticated) {
     // Redirect to appropriate login page

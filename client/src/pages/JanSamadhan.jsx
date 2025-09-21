@@ -95,7 +95,10 @@ export default function JanSamadhanUI() {
             <Button className="size-lg" onClick={()=>navigate('/citizen/login')}>
               Citizen Login
             </Button>
-            <Button variant='secondary' className='size-lg'
+            <Button 
+              variant='secondary' 
+              className='size-lg' 
+              onClick={()=>navigate('/authority/login')}
             >
               Authority Login
             </Button>

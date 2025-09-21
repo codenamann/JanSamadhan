@@ -1,9 +1,8 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import { Icon, divIcon } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { Badge } from '@/components/ui/badge';
-import { statusLabels } from '@/data/mockData';
 
 // Fix for default markers in Leaflet with Vite
 delete Icon.Default.prototype._getIconUrl;
@@ -15,16 +14,14 @@ Icon.Default.mergeOptions({
 
 const getStatusColor = (status) => {
   switch (status) {
-    case 'open':
+    case 'Pending':
       return '#dc2626'; // red
-    case 'in-progress':
-      return '#ea580c'; // orange  
-    case 'resolved':
+    case 'In Progress':
+      return '#f59e0b'; // yellow  
+    case 'Resolved':
       return '#16a34a'; // green
-    case 'closed':
-      return '#64748b'; // gray
     default:
-      return '#64748b';
+      return '#64748b'; // gray
   }
 };
 
@@ -55,12 +52,25 @@ const CivicMap = ({
   selectedIssue,
   className = "h-96 w-full" 
 }) => {
-  // Center map on NYC (can be made dynamic based on user location)
-  const center = [40.7589, -73.9851];
+  // Center map on Satna district, Madhya Pradesh, India
+  const center = [24.5833, 80.8333];
+  const mapRef = useRef(null);
+
+  // Pan to selected issue
+  useEffect(() => {
+    if (selectedIssue && mapRef.current) {
+      const map = mapRef.current;
+      map.setView([selectedIssue.location.lat, selectedIssue.location.lon], 16, {
+        animate: true,
+        duration: 1
+      });
+    }
+  }, [selectedIssue]);
 
   return (
     <div className={className}>
       <MapContainer
+        ref={mapRef}
         center={center}
         zoom={14}
         scrollWheelZoom={true}
@@ -71,17 +81,17 @@ const CivicMap = ({
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         
-        {issues.map((issue) => (
+        {issues.map((complaint) => (
           <Marker
-            key={issue.id}
-            position={[issue.location.lat, issue.location.lng]}
-            icon={createCustomIcon(issue.status)}
+            key={complaint._id}
+            position={[complaint.location.lat, complaint.location.lon]}
+            icon={createCustomIcon(complaint.status)}
             eventHandlers={{
               click: () => {
-                onIssueSelect?.(issue);
+                onIssueSelect?.(complaint);
               },
               mouseover: () => {
-                onIssueHover?.(issue);
+                onIssueHover?.(complaint);
               },
               mouseout: () => {
                 onIssueLeave?.();
@@ -91,38 +101,38 @@ const CivicMap = ({
             <Popup className="civic-popup">
               <div className="p-2 min-w-64">
                 <div className="flex items-center justify-between mb-2">
-                  <h3 className="font-semibold text-sm">{issue.title}</h3>
+                  <h3 className="font-semibold text-sm">{complaint.title}</h3>
                   <Badge 
                     variant="outline" 
-                    className={`status-badge ${issue.status}`}
+                    className={`status-badge ${complaint.status.toLowerCase().replace(' ', '-')}`}
                   >
-                    {statusLabels[issue.status]}
+                    {complaint.status}
                   </Badge>
                 </div>
                 
                 <p className="text-xs text-muted-foreground mb-2 line-clamp-2">
-                  {issue.description}
+                  {complaint.description}
                 </p>
                 
                 <div className="space-y-1 text-xs">
                   <div>
                     <span className="font-medium">Category:</span>{' '}
-                    <span className="capitalize">{issue.category}</span>
+                    <span className="capitalize">{complaint.category}</span>
                   </div>
                   <div>
                     <span className="font-medium">Priority:</span>{' '}
-                    <span className="capitalize">{issue.priority}</span>
+                    <span className="capitalize">{complaint.priority}</span>
                   </div>
                   <div>
                     <span className="font-medium">Reported:</span>{' '}
-                    {new Date(issue.createdAt).toLocaleDateString()}
+                    {new Date(complaint.createdAt).toLocaleDateString()}
                   </div>
                 </div>
 
-                {issue.images.length > 0 && (
+                {complaint.image && (
                   <img 
-                    src={issue.images[0]} 
-                    alt={issue.title}
+                    src={complaint.image} 
+                    alt={complaint.title}
                     className="w-full h-20 object-cover rounded mt-2"
                   />
                 )}

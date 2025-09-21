@@ -1,11 +1,11 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { authorityOTPApi, authorityVerifyOTP, getAuthorityProfile } from '@/lib/apiCitizen';
 
-const AuthorityAuthContext = createContext(undefined);
+const AuthorityAuthContext = createContext();
 
 export const useAuthorityAuth = () => {
   const context = useContext(AuthorityAuthContext);
-  if (context === undefined) {
+  if (!context) {
     throw new Error('useAuthorityAuth must be used within an AuthorityAuthProvider');
   }
   return context;
@@ -14,69 +14,81 @@ export const useAuthorityAuth = () => {
 export const AuthorityAuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [token, setToken] = useState(null);
-  const navigate = useNavigate();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   // Check for existing token on mount
   useEffect(() => {
-    const storedToken = localStorage.getItem('authority_token');
-    if (storedToken) {
-      try {
-        // Decode JWT token to get user info
-        const payload = JSON.parse(atob(storedToken.split('.')[1]));
-        if (payload.exp * 1000 > Date.now()) {
-          setToken(storedToken);
-          setUser({
-            id: payload.id,
-            name: payload.name,
-            email: payload.email,
-            department: payload.department,
-            role: payload.role
-          });
-        } else {
-          // Token expired
-          localStorage.removeItem('authority_token');
-        }
-      } catch (error) {
-        console.error('Error decoding token:', error);
-        localStorage.removeItem('authority_token');
-      }
+    const token = localStorage.getItem('authorityToken');
+    if (token) {
+      fetchUserProfile(token);
+    } else {
+      setLoading(false);
     }
-    setLoading(false);
   }, []);
 
-  const login = (userData, authToken) => {
-    setUser(userData);
-    setToken(authToken);
-    localStorage.setItem('authority_token', authToken);
+  const fetchUserProfile = async (token) => {
+    try {
+      const response = await getAuthorityProfile(token);
+      if (response.success) {
+        setUser(response.data);
+        setIsAuthenticated(true);
+      } else {
+        localStorage.removeItem('authorityToken');
+      }
+    } catch (error) {
+      console.error('Error fetching authority profile:', error);
+      localStorage.removeItem('authorityToken');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const sendOTP = async (email) => {
+    try {
+      const response = await authorityOTPApi(email);
+      return response;
+    } catch (error) {
+      console.error('Error sending OTP:', error);
+      throw error;
+    }
+  };
+
+  const verifyOTP = async (email, otp) => {
+    try {
+      const response = await authorityVerifyOTP(email, otp);
+      if (response.success) {
+        localStorage.setItem('authorityToken', response.data.token);
+        setUser(response.data.authority);
+        setIsAuthenticated(true);
+      }
+      return response;
+    } catch (error) {
+      console.error('Error verifying OTP:', error);
+      throw error;
+    }
   };
 
   const logout = () => {
+    localStorage.removeItem('authorityToken');
     setUser(null);
-    setToken(null);
-    localStorage.removeItem('authority_token');
-    navigate('/authority/login');
+    setIsAuthenticated(false);
   };
 
-  const isAuthenticated = () => {
-    return !!user && !!token;
-  };
-
-  const getAuthHeaders = () => {
-    return {
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json'
-    };
+  const refreshProfile = async () => {
+    const token = localStorage.getItem('authorityToken');
+    if (token) {
+      await fetchUserProfile(token);
+    }
   };
 
   const value = {
     user,
-    token,
     loading,
-    login,
-    logout,
     isAuthenticated,
-    getAuthHeaders
+    sendOTP,
+    verifyOTP,
+    logout,
+    refreshProfile
   };
 
   return (

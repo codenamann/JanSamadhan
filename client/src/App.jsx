@@ -6,13 +6,14 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { IssueProvider } from "@/context/IssueContext";
 import { CitizenAuthProvider } from "@/context/CitizenAuthContext";
 import { AuthorityAuthProvider } from "@/context/AuthorityAuthContext";
+import { SocketProvider } from "@/context/SocketContext";
 import ProtectedRoute from "@/components/ProtectedRoute";
-import Dashboard from "./pages/Dashboard";
 import ReportIssue from "./pages/citizen/ReportIssue";
 import CitizenLogin from "./pages/citizen/Login";
 import CitizenDashboard from "./pages/citizen/Dashboard";
 import AuthorityLogin from "./pages/authority/Login";
 import AuthorityDashboard from "./pages/authority/Dashboard";
+import SuperAdmin from "./pages/SuperAdmin";
 import NotFound from "./pages/NotFound";
 import JanSamadhanUI from "./pages/JanSamadhan";
 import PublicMap from "./pages/PublicMap";
@@ -25,9 +26,10 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <CitizenAuthProvider>
-          <AuthorityAuthProvider>
-            <IssueProvider>
+        <SocketProvider>
+          <CitizenAuthProvider>
+            <AuthorityAuthProvider>
+              <IssueProvider>
               <Routes>
                 {/* Citizen */}
                 <Route path="/citizen/login" element={<CitizenLogin />} />
@@ -50,15 +52,18 @@ const App = () => (
                     </ProtectedRoute>
                   } 
                 />
+                {/* Super Admin */}
+                <Route path="/superadmin" element={<SuperAdmin />} />
                 {/* Legacy/demo routes */}
                 <Route path='/' element={<JanSamadhanUI />} />
                 <Route path="/PublicMap" element={<PublicMap />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
-            </IssueProvider>
-          </AuthorityAuthProvider>
-        </CitizenAuthProvider>
+              </IssueProvider>
+            </AuthorityAuthProvider>
+          </CitizenAuthProvider>
+        </SocketProvider>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>

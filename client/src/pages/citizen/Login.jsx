@@ -112,7 +112,13 @@ const CitizenLogin = () => {
                 />
               </div>
               <Button type="submit" className="w-full">Send OTP</Button>
+              <div className="text-sm font-medium text-center">
+                <Link to="/" className="text-muted-foreground hover:underline hover:text-primary">
+                  ← Return to Home
+                </Link>
+              </div>
             </form>
+            
           )}
 
           {step === 2 && (

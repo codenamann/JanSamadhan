@@ -1,5 +1,4 @@
 import Complaint from "../models/Complaint.js";
-import { validateComplaintData } from "../utils/validation.js";
 
 // @desc    Get all complaints with filtering
 // @route   GET /api/complaints

@@ -4,7 +4,6 @@ import cors from "cors";
 import morgan from "morgan";
 import connectDB from "./config/db.js";
 import complaintRoutes from "./routes/complaintRoutes.js";
-import { requestLogger, errorLogger } from "./middleware/logger.js";
 import authRoutes from './routes/auth.js';
 import imageRoutes from './routes/imageRoutes.js';
 
@@ -28,7 +27,6 @@ app.use(express.urlencoded({ extended: true }));
 // Logging middleware
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan("dev"));
-  app.use(requestLogger);
 } else {
   app.use(morgan("combined"));
 }
@@ -83,9 +81,6 @@ app.use("*", (req, res) => {
     ]
   });
 });
-
-// Error logging middleware
-app.use(errorLogger);
 
 // Global error handling middleware
 app.use((error, req, res, next) => {
