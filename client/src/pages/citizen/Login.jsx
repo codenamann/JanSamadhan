@@ -13,6 +13,7 @@ const CitizenLogin = () => {
   const [step, setStep] = useState(1); // 1 = phone entry, 2 = otp entry
   const [citizen, setCitizen] = useState({});
   const [otp, setOtp] = useState('');
+  const [phone, setPhone] = useState('');
   const [loading, setLoading] = useState(false);
   
   useEffect(() => {
@@ -53,6 +54,7 @@ const CitizenLogin = () => {
         // Extract user data from token or response
         if(res.new){
           setStep(3);
+          console.log(citizen);
         }else{
           console.log(res.token);
           const userData = {
@@ -75,6 +77,7 @@ const CitizenLogin = () => {
   const handleNameSubmit = async (e) => {
     e.preventDefault();
     try{
+      console.log(citizen);
       const res = await citizenSubmitName(citizen.phone, citizen.name);
       console.log("Submitting name", citizen.phone, "with", citizen.name);
       console.log(res);

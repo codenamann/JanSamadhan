@@ -59,7 +59,7 @@ export const citizenSubmitName = async (req, res) => {
 
     await newCitizen.save();
     const token = jwt.sign({ id: newCitizen._id, role: newCitizen.role, phone:newCitizen.phone }, process.env.JWT_SECRET, { expiresIn: '1d' });
-    res.status(201).json({success:true, message: "Signup complete", token,  });
+    res.status(201).json({success:true, message: "Signup complete", token, user: { id: newCitizen._id, name: newCitizen.name, phone: newCitizen.phone, role: newCitizen.role } });
 }
 
 export const resendOTP = async (req, res) => {

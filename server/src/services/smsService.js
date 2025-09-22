@@ -31,7 +31,14 @@ export const sendSMS = async (phoneNumber, message) => {
         consoleOnly: true
       };
     }
-
+    if (process.env.NODE_ENV === 'development') {
+      console.log('Development mode: SMS not sent, only logged to console.');
+      return {
+        success: true,
+        message: "SMS logged to console (development mode)",
+        consoleOnly: true
+      };
+    }
     const result = await twilioClient.messages.create({
       body: message,
       from: process.env.TWILIO_PHONE_NUMBER,
