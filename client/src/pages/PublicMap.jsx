@@ -30,6 +30,7 @@ import {
   Navigation,
 } from "lucide-react";
 import Logo from "@/components/ui/logo";
+import { useCitizenAuth } from "@/context/CitizenAuthContext";
 
 const PublicMap = () => {
   const { socket, isConnected, joinPublicRoom } = useSocket();
@@ -55,6 +56,20 @@ const PublicMap = () => {
       setIsFullscreen(false);
     }
   };
+
+  const { user:citizen} = useCitizenAuth();
+  const { user:authority} = useAuthorityAuth();
+
+  const redirectToDashboard = () => {
+    if (citizen) {
+      navigate('/citizen/dashboard');
+    } else if (authority) {
+      navigate('/authority/dashboard');
+    } else {
+      console.log("No user found, staying put.");
+    }
+  };
+  
 
   // Fetch complaints data
   useEffect(() => {
@@ -191,7 +206,7 @@ const PublicMap = () => {
                 <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
                 Refresh
               </Button>
-              <Button variant="outline" size="sm" className="hidden sm:flex" onClick={()=>navigate('/citizen/dashboard')}>
+              <Button variant="outline" size="sm" className="hidden sm:flex" onClick={()=> {redirectToDashboard();}}>
                 <LayoutDashboard className="h-4 w-4 mr-2" />
                 Dashboard
               </Button>
