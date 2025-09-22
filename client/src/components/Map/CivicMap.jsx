@@ -2,7 +2,9 @@ import React, { useRef, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import { Icon, divIcon } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import { renderToString } from 'react-dom/server';
 import { Badge } from '@/components/ui/badge';
+import MapPin from '../ui/MapPin';
 
 // Fix for default markers in Leaflet with Vite
 delete Icon.Default.prototype._getIconUrl;
@@ -27,20 +29,12 @@ const getStatusColor = (status) => {
 
 const createCustomIcon = (status) => {
   const color = getStatusColor(status);
+  const htmlString = renderToString(<MapPin size={'28'} color={color} />)
   return divIcon({
-    html: `
-      <div style="
-        background-color: ${color}; 
-        width: 20px; 
-        height: 20px; 
-        border-radius: 50%; 
-        border: 2px solid white;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-      "></div>
-    `,
+    html: htmlString,
     className: 'civic-marker',
-    iconSize: [20, 20],
-    iconAnchor: [10, 10],
+    iconSize: [1, 1],
+    iconAnchor: [2, 2], 
   });
 };
 

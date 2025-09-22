@@ -95,10 +95,10 @@ const IssueCard = ({
             <span className="truncate">Lat: {issue.location.lat.toFixed(4)}, Lng: {issue.location.lon.toFixed(4)}</span>
           </div>
           
-          <div className="flex items-center gap-2 text-muted-foreground">
+          {showAuthorityButton && <div className="flex items-center gap-2 text-muted-foreground">
             <User className="h-4 w-4" />
             <span>Reported by {issue.reportedBy.name}</span>
-          </div>
+          </div>}
           
           <div className="flex items-center gap-2 text-muted-foreground">
             <Calendar className="h-4 w-4" />
