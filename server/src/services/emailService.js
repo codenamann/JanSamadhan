@@ -90,7 +90,6 @@ export const sendOTPEmail = async (email, otp, name) => {
     console.log('Development mode - OTP email not sent via Brevo.');
     return {
       success: true,
-      messageId: result.messageId,
       message: "OTP sent successfully"
     };
     
