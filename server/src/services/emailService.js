@@ -76,8 +76,16 @@ export const sendOTPEmail = async (email, otp, name) => {
       email: email,
       name: name || "Authority Member"
     }];
-    
+
+    console.log(process.env.NODE_ENV);
+
     if(process.env.NODE_ENV === 'development'){
+      console.log('Development mode - OTP email not sent via Brevo.');
+      return {
+        success: true,
+        message: "OTP sent successfully"
+      };
+    }else{
       const result = await apiInstance.sendTransacEmail(sendSmtpEmail);
       console.log(`OTP email sent successfully to ${email}`);
       console.log(`Brevo Response:`, result);
@@ -87,11 +95,7 @@ export const sendOTPEmail = async (email, otp, name) => {
         message: "OTP sent successfully"
       };
     }
-    console.log('Development mode - OTP email not sent via Brevo.');
-    return {
-      success: true,
-      message: "OTP sent successfully"
-    };
+    
     
   } catch (error) {
     console.error(`Error sending OTP email to ${email}:`, error);
