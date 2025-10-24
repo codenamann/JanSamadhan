@@ -6,7 +6,6 @@ const apiInstance = new brevo.TransactionalEmailsApi();
 if (!process.env.BREVO_API_KEY) {
   console.log('BREVO_API_KEY not found in environment variables.');
 }else{
-  
   apiInstance.setApiKey(brevo.TransactionalEmailsApiApiKeys.apiKey, process.env.BREVO_API_KEY);
 }
 

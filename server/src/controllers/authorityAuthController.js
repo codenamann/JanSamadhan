@@ -46,6 +46,7 @@ export const sendAuthorityOTP = async (req, res) => {
 
     // Send OTP email
     const emailResult = await sendOTPEmail(email, otp, authority.name);
+    console.log('Email Result:', emailResult);
 
     if (!emailResult.success) {
       return res.status(500).json({
