@@ -190,8 +190,7 @@ const Dashboard = () => {
     } finally {
       setIsResolving(false);
     }
-  };
-
+  }
   // Get status color
   const getStatusColor = (status) => {
     switch (status) {

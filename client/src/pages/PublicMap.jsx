@@ -215,7 +215,6 @@ const PublicMap = () => {
                 size="sm"
                 onClick={() => {
                   console.log('Issues button clicked, current state:', showIssuesList);
-                  console.log('Issues data:', issues);
                   setShowIssuesList(!showIssuesList);
                 }}
                 className="relative bg-blue-500 hover:bg-blue-600"

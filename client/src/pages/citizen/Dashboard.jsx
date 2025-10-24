@@ -47,7 +47,6 @@ const CitizenDashboard = () => {
   }
 
   // Show error state if no user data
-  console.log(user)
   if (!user) {
     return (
       <div className="min-h-screen flex items-center justify-center">

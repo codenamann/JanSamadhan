@@ -13,7 +13,6 @@ const CitizenLogin = () => {
   const [step, setStep] = useState(1); // 1 = phone entry, 2 = otp entry
   const [citizen, setCitizen] = useState({});
   const [otp, setOtp] = useState('');
-  const [phone, setPhone] = useState('');
   const [loading, setLoading] = useState(false);
   
   useEffect(() => {
@@ -80,8 +79,6 @@ const CitizenLogin = () => {
       console.log(citizen);
       const res = await citizenSubmitName(citizen.phone, citizen.name);
       console.log("Submitting name", citizen.phone, "with", citizen.name);
-      console.log(res);
-      console.log(res.token);
       const userData = {
         id: res.user?.id,
         name: res.user?.name,
@@ -120,7 +117,7 @@ const CitizenLogin = () => {
                   required
                 />
               </div>
-              <Button type="submit" className="w-full">Send OTP</Button>
+              <Button type="submit" loading={loading} className="w-full">Send OTP</Button>
               <div className="text-sm font-medium text-center">
                 <Link to="/" className="text-muted-foreground hover:underline hover:text-primary">
                   ← Return to Home
